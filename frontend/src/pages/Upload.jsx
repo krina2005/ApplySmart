@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Upload.css";
 
 const Upload = () => {
   const [file, setFile] = useState(null);
@@ -35,52 +36,76 @@ const Upload = () => {
   };
 
   return (
-    <div style={{ padding: "40px", maxWidth: "800px" }}>
-      <h2>Upload Resume</h2>
+    <div className="upload-container">
+      <h2>Resume Analysis</h2>
 
-      {/* Resume Upload */}
+      <div className="section">
+      <label className="label">Upload Resume (PDF)</label>
+
+      {/* Hidden native input */}
       <input
         type="file"
+        id="resume-upload"
         accept=".pdf"
         onChange={(e) => setFile(e.target.files[0])}
+        style={{ display: "none" }}
       />
 
-      {/* JD Input */}
-      <textarea
-        placeholder="Paste Job Description here..."
-        rows={8}
-        style={{ width: "100%", marginTop: "20px" }}
-        value={jdText}
-        onChange={(e) => setJdText(e.target.value)}
-      />
+      {/* Custom upload box */}
+      <label htmlFor="resume-upload" className="custom-upload">
+        <div className="upload-icon">📄</div>
 
-      <br /><br />
+        {!file ? (
+          <>
+            <p className="upload-title">Click to upload resume</p>
+            <p className="upload-subtitle">PDF only • Max 2MB</p>
+          </>
+        ) : (
+          <>
+            <p className="upload-title">{file.name}</p>
+            <p className="upload-subtitle">File selected successfully</p>
+          </>
+        )}
+      </label>
+    </div>
 
-      <button onClick={handleUpload} disabled={loading}>
-        {loading ? "Analyzing..." : "Upload & Analyze"}
+
+      <div className="section">
+        <label className="label">Paste Job Description</label>
+        <textarea
+          className="textarea"
+          rows={8}
+          value={jdText}
+          onChange={(e) => setJdText(e.target.value)}
+        />
+      </div>
+
+      <button className="analyze-btn" onClick={handleUpload} disabled={loading}>
+        {loading ? "Analyzing Resume..." : "Upload & Analyze"}
       </button>
 
-      {/* Results */}
       {result && (
-        <div style={{ marginTop: "30px" }}>
+        <div className="result-card">
           <h3>Match Score: {result.match_score}%</h3>
 
-          <p><strong>Matched Skills:</strong></p>
-          <ul>
-            {result.matched_skills.map((skill, idx) => (
-              <li key={idx}>{skill}</li>
+          <p>Matched Skills</p>
+          <div className="skill-list">
+            {result.matched_skills.map((s, i) => (
+              <span key={i} className="skill matched">{s}</span>
             ))}
-          </ul>
+          </div>
 
-          <p><strong>Missing Skills:</strong></p>
-          <ul>
-            {result.missing_skills.map((skill, idx) => (
-              <li key={idx}>{skill}</li>
+          <p style={{ marginTop: "20px" }}>Missing Skills</p>
+          <div className="skill-list">
+            {result.missing_skills.map((s, i) => (
+              <span key={i} className="skill missing">{s}</span>
             ))}
-          </ul>
+          </div>
 
-          <p><strong>AI Suggestions:</strong></p>
-          <p>{result.ai_suggestions}</p>
+          <p style={{ marginTop: "20px" }}>
+            <strong>AI Suggestions:</strong><br />
+            {result.ai_suggestions}
+          </p>
         </div>
       )}
     </div>

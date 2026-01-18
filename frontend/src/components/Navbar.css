@@ -1,31 +1,54 @@
 .navbar {
   height: 64px;
-  background: var(--bg-primary);
+  background: linear-gradient(90deg, #020617, #0f172a);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 32px;
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .logo {
   font-size: 20px;
   font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 24px;
+  gap: 32px;
 }
 
 .nav-links a {
+  position: relative;
   text-decoration: none;
   color: var(--text-secondary);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+/* underline animation */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -6px;
+  left: 0;
+  background: var(--accent);
+  transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
-  color: var(--accent);
+  color: var(--text-primary);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .login-box {
@@ -35,26 +58,40 @@
 .login-icon {
   font-size: 28px;
   cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.login-icon:hover {
+  transform: scale(1.1);
+  color: var(--accent);
 }
 
 .dropdown {
   position: absolute;
   right: 0;
-  top: 40px;
-  background: white;
-  color: black;
-  border-radius: 6px;
-  width: 150px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  top: 42px;
+  background: #020617;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 160px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  animation: fadeIn 0.2s ease-in;
 }
 
 .dropdown a {
   display: block;
-  padding: 10px;
+  padding: 12px 14px;
   text-decoration: none;
-  color: black;
+  color: var(--text-secondary);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .dropdown a:hover {
-  background: #f1f5f9;
+  background: #0f172a;
+  color: var(--accent);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
