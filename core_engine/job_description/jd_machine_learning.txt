@@ -1,0 +1,12 @@
+We are seeking a Machine Learning Engineer.
+
+Requirements:
+- Strong Python programming
+- Machine Learning concepts
+- Data preprocessing and feature engineering
+- SQL knowledge
+- Git experience
+
+Nice to have:
+- Deployment of ML models
+- Cloud platforms like AWS

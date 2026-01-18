@@ -1,0 +1,15 @@
+python
+flask
+django
+sql
+git
+rest api
+docker
+aws
+html
+css
+javascript
+machine learning
+data preprocessing
+feature engineering
+cloud deployment
