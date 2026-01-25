@@ -24,8 +24,8 @@ const Navbar = () => {
 
         {open && (
           <div className="dropdown">
-            <Link to="/login/user">User Login</Link>
-            <Link to="/login/admin">Admin Login</Link>
+            <Link to="/login/user" onClick={() => setOpen(false)}>User Login</Link>
+            <Link to="/login/admin" onClick={() => setOpen(false)}>Admin Login</Link>
           </div>
         )}
       </div>

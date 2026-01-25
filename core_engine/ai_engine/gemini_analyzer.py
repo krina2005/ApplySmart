@@ -36,7 +36,7 @@
 # """
 
 #         response = client.models.generate_content(
-#             model="models/text-bison-001",
+#             model="models/gemini-1.5-flash",
 #             contents=prompt
 #         )
 
@@ -45,6 +45,10 @@
 #     except Exception as e:
 #         # 🔒 NEVER crash the system because of AI
 #         return fallback_text
+
+
+
+
 
 from google import genai
 from config.gemini_config import GEMINI_API_KEY
@@ -82,7 +86,7 @@ Keep it concise and practical.
 """
 
         response = client.models.generate_content(
-            model="models/gemini-1.5-flash",
+            model="models/gemini-2.5-flash",
             contents=prompt
         )
 
