@@ -8,12 +8,14 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo">AI Resume Checker</div>
+      <div className="logo-container">
+        <img src="/logo.png" alt="Apply Smart" className="logo-img" />
+        <span className="logo-text">Apply Smart</span>
+      </div>
 
       <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/upload">Upload</Link></li>
-        <li><Link to="#">Score</Link></li>
+        <li><Link to="/upload">Check your match</Link></li>
       </ul>
 
       <div className="login-box">
