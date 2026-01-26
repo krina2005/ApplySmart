@@ -1,10 +1,44 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { supabase } from "../supabaseClient";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 1. Check active session on mount
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setUserRole(session.user.user_metadata?.role || 'user');
+      } else {
+        setUserRole(null);
+      }
+    };
+
+    checkSession();
+
+    // 2. Listen for auth changes (login/logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setUserRole(session.user.user_metadata?.role || 'user');
+      } else {
+        setUserRole(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="navbar">
@@ -14,21 +48,43 @@ const Navbar = () => {
       </div>
 
       <ul className="nav-links">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/upload">Check your match</Link></li>
+        {userRole === 'user' ? (
+          <>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/upload">Check your match</Link></li>
+            <li><Link to="#">Apply</Link></li>
+            <li><Link to="#">Status</Link></li>
+            <li><Link to="/user-dashboard">Dashboard</Link></li>
+          </>
+        ) : (
+          <>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/upload">Check your match</Link></li>
+          </>
+        )}
       </ul>
 
       <div className="login-box">
-        <FaUserCircle
-          className="login-icon"
-          onClick={() => setOpen(!open)}
-        />
+        {userRole ? (
+          <FaSignOutAlt
+            className="login-icon"
+            onClick={handleLogout}
+            title="Logout"
+          />
+        ) : (
+          <>
+            <FaUserCircle
+              className="login-icon"
+              onClick={() => setOpen(!open)}
+            />
 
-        {open && (
-          <div className="dropdown">
-            <Link to="/login/user" onClick={() => setOpen(false)}>User Login</Link>
-            <Link to="/login/admin" onClick={() => setOpen(false)}>Admin Login</Link>
-          </div>
+            {open && (
+              <div className="dropdown">
+                <Link to="/login/user" onClick={() => setOpen(false)}>User Login</Link>
+                <Link to="/login/admin" onClick={() => setOpen(false)}>Admin Login</Link>
+              </div>
+            )}
+          </>
         )}
       </div>
     </nav>

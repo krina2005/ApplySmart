@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import UserLogin from "./pages/UserLogin";
 import AdminLogin from "./pages/AdminLogin";
 import Upload from "./pages/Upload";
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/login/user" element={<UserLogin />} />
         <Route path="/login/admin" element={<AdminLogin />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

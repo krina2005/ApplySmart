@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LoginShared.css';
 import { supabase } from '../supabaseClient';
 
@@ -8,6 +9,7 @@ const UserLogin = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const validateEmail = (email) => {
     // Basic email regex
@@ -65,6 +67,7 @@ const UserLogin = () => {
 
         alert("Logged in successfully as User!");
         console.log("Logged in user:", data.user);
+        navigate('/user-dashboard'); // Redirect to User Dashboard
 
       } else {
         // Sign Up Logic
@@ -83,6 +86,7 @@ const UserLogin = () => {
           alert("Account created! Please verify your email before logging in.");
         } else {
           alert("Account created and logged in!");
+          navigate('/user-dashboard'); // Redirect to User Dashboard if session exists
         }
         console.log("Signed up user:", data.user);
       }
