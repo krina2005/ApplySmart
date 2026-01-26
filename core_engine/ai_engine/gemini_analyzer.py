@@ -22,7 +22,7 @@ def generate_suggestions(missing_skills, job_title="the role"):
         The candidate is missing these skills for the role of '{job_title}': 
         {", ".join(missing_skills)}
 
-        Provide a structured, step-by-step improvement plan to increase their resume score. 
+        Provide a structured, brief improvement plan to increase their resume score. 
         For each skill, include:
         1. **Actionable Step**: How to bridge the gap (e.g., a specific project idea).
         2. **Study Resources**: Specific topics to master.
@@ -30,10 +30,11 @@ def generate_suggestions(missing_skills, job_title="the role"):
 
         Format the response clearly with bold headings and bullet points. 
         Keep the tone professional and encouraging.
+        Make the response in very brief.
         """
 
         response = client.models.generate_content(
-            model="gemini-2.0-flash", # Note: Standardizing model name
+            model="models/gemini-2.5-flash", # Note: Standardizing model name
             contents=prompt
         )
 

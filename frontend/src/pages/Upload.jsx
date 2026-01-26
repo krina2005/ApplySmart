@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReactMarkdown from 'react-markdown';
 import "./Upload.css";
 
 const Upload = () => {
@@ -129,8 +130,8 @@ const Upload = () => {
 
             <div style={{ marginTop: "30px" }}>
               <h4 style={{ marginBottom: "15px", color: "var(--accent)" }}>AI Suggestions</h4>
-              <div className="suggestions-box">
-                {result.ai_suggestions}
+              <div className="suggestions-box markdown-content">
+                <ReactMarkdown>{result.ai_suggestions}</ReactMarkdown>
               </div>
             </div>
           </div>

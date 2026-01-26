@@ -237,3 +237,49 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Markdown Content Styles */
+.markdown-content {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.markdown-content strong,
+.markdown-content b {
+  color: #fff;
+  font-weight: 700;
+}
+
+.markdown-content p {
+  margin-bottom: 12px;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 12px 0 12px 24px;
+}
+
+.markdown-content li {
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+  color: var(--text-primary);
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.markdown-content code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #fbbf24;
+}
