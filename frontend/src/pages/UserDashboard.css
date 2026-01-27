@@ -1,0 +1,214 @@
+.dashboard {
+  min-height: 100vh;
+  padding: 2.5rem;
+  background: radial-gradient(circle at top, #0f1c2e, #050b16);
+  color: #ffffff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.dashboard-subtitle {
+  text-align: center;
+  color: #9bb0c9;
+  margin-bottom: 2rem;
+}
+
+.filter-box {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.filter-box input,
+.status-search {
+  background: #0c1626;
+  border: 1px solid #1e2a40;
+  color: #fff;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  width: 260px;
+}
+
+.filter-box input::placeholder,
+.status-search::placeholder {
+  color: #6f86a3;
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.section h2 {
+  margin-bottom: 1.5rem;
+  color: #4cc3ff;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.company-card {
+  background: linear-gradient(180deg, #0e1b2f, #0a1423);
+  border: 1px solid #1e2a40;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 0 20px rgba(76, 195, 255, 0.08);
+}
+
+.company-card h3 {
+  color: #4cc3ff;
+  margin-bottom: 0.5rem;
+}
+
+.company-card span {
+  color: #8fb6d9;
+}
+
+.apply-btn {
+  margin-top: 1rem;
+  width: 100%;
+  background: #4cc3ff;
+  border: none;
+  color: #001018;
+  padding: 0.6rem;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.apply-btn:hover {
+  background: #2bb6ff;
+}
+
+.status-list {
+  margin-top: 1.5rem;
+}
+
+.status-card {
+  display: flex;
+  justify-content: space-between;
+  background: #0c1626;
+  border: 1px solid #1e2a40;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+}
+
+.status {
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.status.resume-uploaded {
+  background: #1f3b5c;
+  color: #4cc3ff;
+}
+
+.status.applied {
+  background: #233f2e;
+  color: #4cff88;
+}
+
+.status.rejected {
+  background: #3b1f1f;
+  color: #ff6b6b;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: linear-gradient(180deg, #0e1b2f, #0a1423);
+  border: 1px solid #1e2a40;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 360px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(76, 195, 255, 0.2);
+}
+
+.modal h3 {
+  color: #4cc3ff;
+  margin-bottom: 0.5rem;
+}
+
+.modal p {
+  color: #9bb0c9;
+  margin-bottom: 1rem;
+}
+
+.modal input[type="file"] {
+  width: 100%;
+  background: #0c1626;
+  border: 1px solid #1e2a40;
+  color: #fff;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.modal-btn {
+  width: 45%;
+  padding: 0.6rem;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-btn.submit {
+  background: #4cc3ff;
+  color: #001018;
+}
+
+.modal-btn.submit:hover {
+  background: #2bb6ff;
+}
+
+.modal-btn.cancel {
+  background: transparent;
+  border: 1px solid #ff6b6b;
+  color: #ff6b6b;
+}
+
+.modal-btn.cancel:hover {
+  background: #3b1f1f;
+}
+
+.status.pending {
+  background: #3b3b1f;
+  color: #ffd966;
+}
+
+.status.accepted {
+  background: #1f3b2a;
+  color: #4cff88;
+}
+
+.status.rejected {
+  background: #3b1f1f;
+  color: #ff6b6b;
+}
