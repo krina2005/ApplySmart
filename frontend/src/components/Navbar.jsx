@@ -56,6 +56,13 @@ const Navbar = () => {
             <li><Link to="#">Status</Link></li>
             <li><Link to="/user-dashboard">Dashboard</Link></li>
           </>
+        ) : userRole === 'company' ? (
+          <>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/company-dashboard">Company Dashboard</Link></li>
+            <li><Link to="/post-job">Post Job</Link></li>
+            <li><Link to="/applications">Applications</Link></li>
+          </>
         ) : (
           <>
             <li><Link to="/">Home</Link></li>
@@ -82,6 +89,7 @@ const Navbar = () => {
               <div className="dropdown">
                 <Link to="/login/user" onClick={() => setOpen(false)}>User Login</Link>
                 <Link to="/login/admin" onClick={() => setOpen(false)}>Admin Login</Link>
+                <Link to="/login/company" onClick={() => setOpen(false)}>Company Login</Link>
               </div>
             )}
           </>
