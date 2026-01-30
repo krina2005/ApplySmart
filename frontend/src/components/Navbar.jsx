@@ -40,6 +40,10 @@ const Navbar = () => {
     navigate("/");
   };
 
+  // Logic to hide logged-in state on login pages
+  const isLoginPage = location.pathname.startsWith('/login/');
+  const displayRole = isLoginPage ? null : userRole;
+
   return (
     <nav className="navbar">
       <div className="logo-container">
@@ -48,7 +52,7 @@ const Navbar = () => {
       </div>
 
       <ul className="nav-links">
-        {userRole === 'user' ? (
+        {displayRole === 'user' ? (
           <>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/upload">Check your match</Link></li>
@@ -56,7 +60,7 @@ const Navbar = () => {
             <li><Link to="#">Status</Link></li>
             <li><Link to="/user-dashboard">Dashboard</Link></li>
           </>
-        ) : userRole === 'company' ? (
+        ) : displayRole === 'company' ? (
           <>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/company-dashboard">Company Dashboard</Link></li>
@@ -72,7 +76,7 @@ const Navbar = () => {
       </ul>
 
       <div className="login-box">
-        {userRole ? (
+        {displayRole ? (
           <FaSignOutAlt
             className="login-icon"
             onClick={handleLogout}

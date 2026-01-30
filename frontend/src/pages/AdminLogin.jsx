@@ -67,7 +67,7 @@ const AdminLogin = () => {
 
         alert("Logged in successfully as Admin!");
         console.log("Logged in user:", data.user);
-        navigate('/admin-dashboard'); // Redirect to Admin Dashboard
+        window.open('/admin-dashboard', '_blank'); // Open Admin Dashboard in new tab
 
       } else {
         // Sign Up Logic
@@ -86,7 +86,7 @@ const AdminLogin = () => {
           alert("Account created! Please verify your email before logging in.");
         } else {
           alert("Account created and logged in!");
-          navigate('/admin-dashboard'); // Redirect to Admin Dashboard if session exists
+          window.open('/admin-dashboard', '_blank'); // Open Admin Dashboard in new tab if session exists
         }
         console.log("Signed up user:", data.user);
       }

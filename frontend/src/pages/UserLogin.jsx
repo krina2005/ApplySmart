@@ -67,7 +67,7 @@ const UserLogin = () => {
 
         alert("Logged in successfully as User!");
         console.log("Logged in user:", data.user);
-        navigate('/user-dashboard'); // Redirect to User Dashboard
+        window.open('/user-dashboard', '_blank'); // Open User Dashboard in new tab
 
       } else {
         // Sign Up Logic
@@ -86,7 +86,7 @@ const UserLogin = () => {
           alert("Account created! Please verify your email before logging in.");
         } else {
           alert("Account created and logged in!");
-          navigate('/user-dashboard'); // Redirect to User Dashboard if session exists
+          window.open('/user-dashboard', '_blank'); // Open User Dashboard in new tab if session exists
         }
         console.log("Signed up user:", data.user);
       }

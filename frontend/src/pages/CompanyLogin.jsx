@@ -67,7 +67,7 @@ const CompanyLogin = () => {
 
                 alert("Logged in successfully as Company!");
                 console.log("Logged in user:", data.user);
-                navigate('/company-dashboard'); // Redirect to Company Dashboard
+                window.open('/company-dashboard', '_blank'); // Open Company Dashboard in new tab
 
             } else {
                 // Sign Up Logic
@@ -86,7 +86,7 @@ const CompanyLogin = () => {
                     alert("Account created! Please verify your email before logging in.");
                 } else {
                     alert("Account created and logged in!");
-                    navigate('/company-dashboard'); // Redirect to Company Dashboard if session exists
+                    window.open('/company-dashboard', '_blank'); // Open Company Dashboard in new tab if session exists
                 }
                 console.log("Signed up user:", data.user);
             }
