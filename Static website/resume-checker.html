@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resume Checker | ApplySmart AI</title>
+  <link rel="stylesheet" href="css/checker.css" />
+</head>
+<body>
+
+  <nav class="topbar">
+    <h2>ApplySmart AI</h2>
+    <a href="index.html">Home</a>
+  </nav>
+
+  <main class="checker-container">
+    <h1>AI Resume Checker</h1>
+    <p>
+      Upload your resume and get instant AI-style feedback.
+      No login required.
+    </p>
+
+    <input type="file" id="resumeInput" accept=".pdf" />
+    <button onclick="checkResume()">Check Resume</button>
+
+    <div id="result" class="result hidden"></div>
+  </main>
+
+  <script src="js/checker.js"></script>
+</body>
+</html>

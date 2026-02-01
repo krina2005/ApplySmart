@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import './CompanyDashboard.css';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
@@ -90,46 +91,17 @@ const CompanyDashboard = () => {
         }
     };
 
-    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
+    if (loading) return <div style={{ padding: '2rem', textAlign: 'center', color: '#fff' }}>Loading...</div>;
 
     return (
-        <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h1>Company Dashboard</h1>
-                <button
-                    onClick={handleLogout}
-                    style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
-                >
-                    Logout
-                </button>
-            </div>
-
-            <div style={{
-                border: '1px solid #e0e0e0',
-                borderRadius: '8px',
-                padding: '20px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-            }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <h2 style={{ margin: 0 }}>Company Profile</h2>
+        <div className="company-dashboard-container">
+            <div className="dashboard-card">
+                <div className="card-header">
+                    <h2 className="card-title">Company Profile</h2>
                     {!isEditing && (
                         <button
                             onClick={() => setIsEditing(true)}
-                            style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#007bff',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer'
-                            }}
+                            className="btn-primary"
                         >
                             Edit Profile
                         </button>
@@ -138,8 +110,8 @@ const CompanyDashboard = () => {
 
                 {isEditing ? (
                     <form onSubmit={handleSave}>
-                        <div style={{ marginBottom: '15px' }}>
-                            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Company Name</label>
+                        <div className="form-group">
+                            <label className="form-label">Company Name</label>
                             <input
                                 type="text"
                                 name="company_name"
@@ -147,54 +119,54 @@ const CompanyDashboard = () => {
                                 onChange={handleChange}
                                 placeholder="e.g. Acme Corp"
                                 required
-                                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                className="form-input"
                             />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Website</label>
+                        <div className="grid-2-col">
+                            <div className="form-group">
+                                <label className="form-label">Website</label>
                                 <input
                                     type="url"
                                     name="website"
                                     value={profile.website}
                                     onChange={handleChange}
                                     placeholder="https://"
-                                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                    className="form-input"
                                 />
                             </div>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Location</label>
+                            <div className="form-group">
+                                <label className="form-label">Location</label>
                                 <input
                                     type="text"
                                     name="location"
                                     value={profile.location}
                                     onChange={handleChange}
                                     placeholder="City, Country"
-                                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                    className="form-input"
                                 />
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Industry</label>
+                        <div className="grid-2-col">
+                            <div className="form-group">
+                                <label className="form-label">Industry</label>
                                 <input
                                     type="text"
                                     name="industry"
                                     value={profile.industry}
                                     onChange={handleChange}
                                     placeholder="e.g. Technology"
-                                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                    className="form-input"
                                 />
                             </div>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Company Size</label>
+                            <div className="form-group">
+                                <label className="form-label">Company Size</label>
                                 <select
                                     name="size"
                                     value={profile.size}
                                     onChange={handleChange}
-                                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                    className="form-select"
                                 >
                                     <option value="">Select Size</option>
                                     <option value="1-10">1-10 employees</option>
@@ -206,97 +178,80 @@ const CompanyDashboard = () => {
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Description</label>
+                        <div className="form-group">
+                            <label className="form-label">Description</label>
                             <textarea
                                 name="description"
                                 value={profile.description}
                                 onChange={handleChange}
-                                rows="4"
-                                placeholder="Describe your company..."
-                                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
+                                rows="6"
+                                placeholder="Describe your company and culture..."
+                                className="form-textarea"
                             />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div className="action-buttons">
                             <button
                                 type="submit"
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#28a745',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
+                                className="btn-primary btn-save"
                             >
                                 Save Profile
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setIsEditing(false)}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#6c757d',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
+                                className="btn-secondary btn-cancel"
                             >
                                 Cancel
                             </button>
                         </div>
                     </form>
                 ) : (
-                    <div>
+                    <div className="profile-view">
                         {profile.company_name ? (
                             <>
-                                <h3 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>{profile.company_name}</h3>
-                                {(profile.location || profile.industry) && (
-                                    <p style={{ color: '#666', marginBottom: '15px' }}>
-                                        {profile.industry && <span>{profile.industry}</span>}
-                                        {profile.industry && profile.location && <span> • </span>}
-                                        {profile.location && <span>{profile.location}</span>}
-                                    </p>
-                                )}
+                                <div className="profile-view-header">
+                                    <h3 className="company-name-large">{profile.company_name}</h3>
+                                    {(profile.location || profile.industry) && (
+                                        <div className="company-meta">
+                                            {profile.industry && <span>{profile.industry}</span>}
+                                            {profile.industry && profile.location && <span className="meta-separator">•</span>}
+                                            {profile.location && <span>{profile.location}</span>}
+                                        </div>
+                                    )}
+                                </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+                                <div className="info-grid">
                                     {profile.website && (
-                                        <div>
-                                            <strong>Website:</strong><br />
-                                            <a href={profile.website} target="_blank" rel="noopener noreferrer">{profile.website}</a>
+                                        <div className="info-item">
+                                            <span className="info-label">Website</span>
+                                            <div className="info-value">
+                                                <a href={profile.website} target="_blank" rel="noopener noreferrer" className="info-link">{profile.website}</a>
+                                            </div>
                                         </div>
                                     )}
                                     {profile.size && (
-                                        <div>
-                                            <strong>Size:</strong><br />
-                                            {profile.size}
+                                        <div className="info-item">
+                                            <span className="info-label">Size</span>
+                                            <div className="info-value">{profile.size}</div>
                                         </div>
                                     )}
                                 </div>
 
                                 {profile.description && (
-                                    <div>
-                                        <strong>About:</strong>
-                                        <p style={{ lineHeight: '1.6', color: '#333' }}>{profile.description}</p>
+                                    <div className="about-section">
+                                        <span className="info-label">About</span>
+                                        <p className="about-text">{profile.description}</p>
                                     </div>
                                 )}
                             </>
                         ) : (
-                            <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
-                                <p>You haven't set up your profile yet.</p>
+                            <div className="empty-state">
+                                <p>You haven't set up your company profile yet.</p>
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    style={{
-                                        marginTop: '10px',
-                                        padding: '8px 16px',
-                                        backgroundColor: '#007bff',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer'
-                                    }}
+                                    className="btn-primary"
+                                    style={{ marginTop: '1rem' }}
                                 >
                                     Create Profile
                                 </button>

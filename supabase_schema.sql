@@ -26,3 +26,9 @@ create policy "Users can update own profile"
 create policy "Users can update own profile (update)"
   on public.company_profiles for update
   using ( auth.uid() = id );
+
+-- Allow all users to view company profiles (Required for User Dashboard)
+drop policy if exists "Enable read access for all users" on public.company_profiles;
+create policy "Enable read access for all users"
+  on public.company_profiles for select
+  using ( true );

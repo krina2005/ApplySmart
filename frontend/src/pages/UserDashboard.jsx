@@ -1,40 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { supabase } from "../supabaseClient";
 import "./UserDashboard.css";
 
-const companies = [
-  {
-    id: 1,
-    name: "Google",
-    domain: "AI",
-    tech: ["Python", "React", "ML"],
-    location: "Bangalore",
-  },
-  {
-    id: 2,
-    name: "Amazon",
-    domain: "Cloud",
-    tech: ["AWS", "Java", "Docker"],
-    location: "Hyderabad",
-  },
-  {
-    id: 3,
-    name: "Microsoft",
-    domain: "Web",
-    tech: ["React", "Node", "Azure"],
-    location: "Pune",
-  },
-  {
-    id: 4,
-    name: "StartupX",
-    domain: "Web",
-    tech: ["MERN", "MongoDB"],
-    location: "Remote",
-  },
-];
+
 
 const UserDashboard = () => {
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [domainFilter, setDomainFilter] = useState("");
-  const [techFilter, setTechFilter] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
 
   const [applications, setApplications] = useState([
@@ -47,12 +20,37 @@ const UserDashboard = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [resumeFile, setResumeFile] = useState(null);
 
+  // Fetch Companies from Supabase
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('company_profiles')
+          .select('*');
+
+        if (error) throw error;
+        console.log("Fetched companies:", data);
+        setCompanies(data || []);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
   const filteredCompanies = companies.filter((c) => {
+    const name = c.company_name || "";
+    const industry = c.industry || "";
+    // const skills = c.tech || []; // Tech stack not yet in DB, using Industry for now
+
     return (
       (domainFilter === "" ||
-        c.domain.toLowerCase().includes(domainFilter.toLowerCase())) &&
-      (techFilter === "" ||
-        c.tech.join(" ").toLowerCase().includes(techFilter.toLowerCase()))
+        industry.toLowerCase().includes(domainFilter.toLowerCase()) ||
+        name.toLowerCase().includes(domainFilter.toLowerCase()))
+      // Removed tech filter for now until DB supports it, or mapped to industry
     );
   });
 
@@ -96,41 +94,48 @@ const UserDashboard = () => {
       <div className="filter-box">
         <input
           type="text"
-          placeholder="Filter by interest (AI, Web, Cloud)"
+          placeholder="Filter by Name or Industry..."
           value={domainFilter}
           onChange={(e) => setDomainFilter(e.target.value)}
+          style={{ width: '100%', maxWidth: '400px' }}
         />
-        <input
-          type="text"
-          placeholder="Filter by tech stack (React, Python)"
-          value={techFilter}
-          onChange={(e) => setTechFilter(e.target.value)}
-        />
+        {/* Removed Tech Filter input as data is available yet */}
       </div>
 
       {/* COMPANY LIST */}
       <div className="section">
         <h2>Suggested Companies</h2>
-        <div className="card-grid">
-          {filteredCompanies.map((company) => (
-            <div className="company-card" key={company.id}>
-              <h3>{company.name}</h3>
-              <p><span>Domain:</span> {company.domain}</p>
-              <p><span>Tech:</span> {company.tech.join(", ")}</p>
-              <p><span>Location:</span> {company.location}</p>
+        {loading ? (
+          <p style={{ color: '#fff', textAlign: 'center' }}>Loading companies...</p>
+        ) : filteredCompanies.length === 0 ? (
+          <p style={{ color: '#aaa', textAlign: 'center' }}>No companies found.</p>
+        ) : (
+          <div className="card-grid">
+            {filteredCompanies.map((company) => (
+              <div className="company-card" key={company.id}>
+                <h3>{company.company_name}</h3>
+                {company.industry && <p><span>Industry:</span> {company.industry}</p>}
+                {company.size && <p><span>Size:</span> {company.size}</p>}
+                {company.location && <p><span>Location:</span> {company.location}</p>}
+                {company.website && (
+                  <p>
+                    <span>Website:</span> <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ color: '#4cc3ff' }}>Link</a>
+                  </p>
+                )}
 
-              <button
-                className="apply-btn"
-                onClick={() => {
-                  setSelectedCompany(company.name);
-                  setShowModal(true);
-                }}
-              >
-                Upload Resume & Apply
-              </button>
-            </div>
-          ))}
-        </div>
+                <button
+                  className="apply-btn"
+                  onClick={() => {
+                    setSelectedCompany(company.company_name);
+                    setShowModal(true);
+                  }}
+                >
+                  Upload Resume & Apply
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* STATUS SECTION */}

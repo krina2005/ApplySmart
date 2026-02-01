@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard | ApplySmart AI</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+<body>
+
+  <nav class="topbar">
+    <h2>Admin Dashboard</h2>
+    <button onclick="adminLogout()">Logout</button>
+  </nav>
+
+  <main class="dashboard">
+    <h1>Welcome, Admin</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h3 id="totalResumes">0</h3>
+        <p>Total Resumes</p>
+      </div>
+
+      <div class="card">
+        <h3 id="pendingResumes">0</h3>
+        <p>Pending</p>
+      </div>
+
+      <div class="card">
+        <h3 id="acceptedResumes">0</h3>
+        <p>Accepted</p>
+      </div>
+
+      <div class="card">
+        <h3 id="rejectedResumes">0</h3>
+        <p>Rejected</p>
+      </div>
+    </div>
+
+    <br />
+
+    <button class="primary-btn" onclick="goToResumes()">
+      Manage Resumes
+    </button>
+  </main>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

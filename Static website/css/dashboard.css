@@ -1,0 +1,87 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.topbar {
+  background: #020617;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar a,
+.topbar button {
+  color: #38bdf8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.dashboard {
+  padding: 40px;
+}
+
+.cards {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.card {
+  background: #020617;
+  padding: 30px;
+  border-radius: 12px;
+  width: 250px;
+  cursor: pointer;
+  border: 1px solid #1e293b;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #38bdf8;
+}
+
+.upload-container,
+.status-container {
+  padding: 40px;
+}
+
+.upload-container input {
+  margin-bottom: 15px;
+}
+
+.upload-container button {
+  padding: 10px 20px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.status-box {
+  background: #020617;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  margin-bottom: 15px;
+}
+
+.status-box iframe {
+  background: #020617;
+  border-radius: 8px;
+}
+.status-box p {
+  margin: 10px 0 0 0;
+}
