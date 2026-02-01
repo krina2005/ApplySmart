@@ -2,135 +2,214 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import "./UserDashboard.css";
 
-
-
 const UserDashboard = () => {
-  const [companies, setCompanies] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [domainFilter, setDomainFilter] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
 
-  const [applications, setApplications] = useState([
-    { company: "Google", status: "Accepted" },
-    { company: "Amazon", status: "Pending" },
-    { company: "Microsoft", status: "Rejected" },
-  ]);
+  const [applications, setApplications] = useState([]);
+  const [user, setUser] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState("");
+  const [selectedJob, setSelectedJob] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
+  const [showApplyForm, setShowApplyForm] = useState(false);
 
-  // Fetch Companies from Supabase
+  // Fetch Jobs and Applications
   useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchData = async () => {
       try {
-        const { data, error } = await supabase
-          .from('company_profiles')
-          .select('*');
+        setLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
 
-        if (error) throw error;
-        console.log("Fetched companies:", data);
-        setCompanies(data || []);
+        // Fetch Jobs with Company details
+        const { data: jobsData, error: jobsError } = await supabase
+          .from('jobs')
+          .select(`
+            id,
+            title,
+            location,
+            type,
+            description,
+            company_id,
+            company_profiles (
+              company_name,
+              industry,
+              website
+            )
+          `)
+          .order('created_at', { ascending: false });
+
+        if (jobsError) throw jobsError;
+        setJobs(jobsData || []);
+
+        if (user) {
+          // Fetch Applications
+          const { data: appsData, error: appsError } = await supabase
+            .from('applications')
+            .select(`
+              id,
+              status,
+              created_at,
+              job_id,
+              jobs (
+                title,
+                company_profiles (
+                  company_name
+                )
+              )
+            `)
+            .eq('user_id', user.id);
+
+          if (appsError) throw appsError;
+          setApplications(appsData || []);
+        }
+
       } catch (error) {
-        console.error("Error fetching companies:", error);
+        console.error("Error fetching data:", error);
+        setError(error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCompanies();
+    fetchData();
   }, []);
 
-  const filteredCompanies = companies.filter((c) => {
-    const name = c.company_name || "";
-    const industry = c.industry || "";
-    // const skills = c.tech || []; // Tech stack not yet in DB, using Industry for now
+  const filteredJobs = jobs.filter((job) => {
+    const title = job.title || "";
+    const companyName = job.company_profiles?.company_name || "";
+    const industry = job.company_profiles?.industry || "";
 
+    // Search by Job Title, Company Name, or Industry
+    const term = domainFilter.toLowerCase();
     return (
-      (domainFilter === "" ||
-        industry.toLowerCase().includes(domainFilter.toLowerCase()) ||
-        name.toLowerCase().includes(domainFilter.toLowerCase()))
-      // Removed tech filter for now until DB supports it, or mapped to industry
+      domainFilter === "" ||
+      title.toLowerCase().includes(term) ||
+      companyName.toLowerCase().includes(term) ||
+      industry.toLowerCase().includes(term)
     );
   });
 
-  const filteredApplications = applications.filter((a) =>
-    a.company.toLowerCase().includes(searchStatus.toLowerCase())
-  );
+  const filteredApplications = applications.filter((app) => {
+    const title = app.jobs?.title || "";
+    const company = app.jobs?.company_profiles?.company_name || "";
+    const term = searchStatus.toLowerCase();
 
-  const handleSubmitResume = () => {
+    return title.toLowerCase().includes(term) || company.toLowerCase().includes(term);
+  });
+
+  const handleSubmitResume = async () => {
     if (!resumeFile) {
       alert("Please upload your resume");
+      return;
+    }
+    if (!user) {
+      alert("Please log in to apply");
       return;
     }
 
     // prevent duplicate applications
     const alreadyApplied = applications.some(
-      (app) => app.company === selectedCompany
+      (app) => app.job_id === selectedJob.id
     );
 
     if (alreadyApplied) {
-      alert("You have already applied to this company");
+      alert("You have already applied to this job");
       return;
     }
 
-    setApplications((prev) => [
-      ...prev,
-      { company: selectedCompany, status: "Pending" },
-    ]);
+    try {
+      // NOTE: In a real app, upload resumeFile to Supabase Storage first, get URL
+      const fakeResumeUrl = "https://example.com/resume.pdf"; // Mock for now
 
-    setShowModal(false);
-    setResumeFile(null);
+      const { data, error } = await supabase
+        .from('applications')
+        .insert([
+          {
+            job_id: selectedJob.id,
+            user_id: user.id,
+            resume_url: fakeResumeUrl,
+            status: 'Pending'
+          }
+        ])
+        .select(`
+              id,
+              status,
+              created_at,
+              job_id,
+              jobs (
+                title,
+                company_profiles (
+                  company_name
+                )
+              )
+            `)
+        .single();
+
+      if (error) throw error;
+
+      setApplications((prev) => [...prev, data]);
+      alert("Application submitted successfully!");
+      setShowModal(false);
+      setResumeFile(null);
+
+    } catch (err) {
+      console.error("Error applying:", err);
+      alert("Failed to apply: " + err.message);
+    }
   };
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">User Dashboard</h1>
       <p className="dashboard-subtitle">
-        Discover companies and track your applications
+        Find your dream job and track your applications
       </p>
 
       {/* FILTER SECTION */}
       <div className="filter-box">
         <input
           type="text"
-          placeholder="Filter by Name or Industry..."
+          placeholder="Search Job Title, Company, or Industry..."
           value={domainFilter}
           onChange={(e) => setDomainFilter(e.target.value)}
           style={{ width: '100%', maxWidth: '400px' }}
         />
-        {/* Removed Tech Filter input as data is available yet */}
       </div>
 
-      {/* COMPANY LIST */}
+      {/* JOB LIST */}
       <div className="section">
-        <h2>Suggested Companies</h2>
+        <h2>Open Positions</h2>
         {loading ? (
-          <p style={{ color: '#fff', textAlign: 'center' }}>Loading companies...</p>
-        ) : filteredCompanies.length === 0 ? (
-          <p style={{ color: '#aaa', textAlign: 'center' }}>No companies found.</p>
+          <p style={{ color: '#fff', textAlign: 'center' }}>Loading jobs...</p>
+        ) : error ? (
+          <div style={{ textAlign: 'center', color: '#ff6b6b' }}>
+            <p>Error loading jobs: {error.message}</p>
+          </div>
+        ) : filteredJobs.length === 0 ? (
+          <p style={{ color: '#aaa', textAlign: 'center' }}>No jobs found.</p>
         ) : (
           <div className="card-grid">
-            {filteredCompanies.map((company) => (
-              <div className="company-card" key={company.id}>
-                <h3>{company.company_name}</h3>
-                {company.industry && <p><span>Industry:</span> {company.industry}</p>}
-                {company.size && <p><span>Size:</span> {company.size}</p>}
-                {company.location && <p><span>Location:</span> {company.location}</p>}
-                {company.website && (
-                  <p>
-                    <span>Website:</span> <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ color: '#4cc3ff' }}>Link</a>
-                  </p>
-                )}
+            {filteredJobs.map((job) => (
+              <div className="company-card" key={job.id}> {/* Keeping classname company-card for style reuse */}
+                <h3>{job.title}</h3>
+                <p style={{ color: '#aaa', marginBottom: '0.5rem' }}>
+                  <span>Company: </span>
+                  <strong>{job.company_profiles?.company_name}</strong>
+                </p>
 
+                {job.location && <p><span>Location:</span> {job.location}</p>}
                 <button
                   className="apply-btn"
                   onClick={() => {
-                    setSelectedCompany(company.company_name);
+                    setSelectedJob(job);
                     setShowModal(true);
                   }}
                 >
-                  Upload Resume & Apply
+                  View Details
                 </button>
               </div>
             ))}
@@ -144,15 +223,23 @@ const UserDashboard = () => {
         <input
           type="text"
           className="status-search"
-          placeholder="Search company name"
+          placeholder="Search applications..."
           value={searchStatus}
           onChange={(e) => setSearchStatus(e.target.value)}
         />
 
         <div className="status-list">
-          {filteredApplications.map((app, index) => (
-            <div className="status-card" key={index}>
-              <strong>{app.company}</strong>
+          {filteredApplications.length === 0 && (
+            <p style={{ color: '#aaa', textAlign: 'center' }}>You haven't applied to any jobs yet.</p>
+          )}
+          {filteredApplications.map((app) => (
+            <div className="status-card" key={app.id}>
+              <div>
+                <strong>{app.jobs?.title}</strong>
+                <div style={{ fontSize: '0.9em', color: '#ccc' }}>
+                  {app.jobs?.company_profiles?.company_name}
+                </div>
+              </div>
               <span
                 className={`status ${app.status.toLowerCase()}`}
               >
@@ -163,33 +250,69 @@ const UserDashboard = () => {
         </div>
       </div>
 
-      {/* RESUME UPLOAD MODAL */}
-      {showModal && (
+      {/* JOB DETAILS & RESUME UPLOAD MODAL */}
+      {showModal && selectedJob && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Upload Resume</h3>
-            <p>
-              Applying for <strong>{selectedCompany}</strong>
+          <div className="modal" style={{ width: '500px', maxWidth: '90%', textAlign: 'left' }}>
+            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{selectedJob.title}</h3>
+            <p style={{ color: '#aaa', marginBottom: '1.5rem' }}>
+              <strong>{selectedJob.company_profiles?.company_name}</strong>
+              {selectedJob.location && <span> • {selectedJob.location}</span>}
+              {selectedJob.type && <span> • {selectedJob.type}</span>}
             </p>
 
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => setResumeFile(e.target.files[0])}
-            />
+            <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1.5rem', paddingRight: '10px' }}>
+              <h4 style={{ color: '#4cc3ff', marginBottom: '0.5rem' }}>Job Description</h4>
+              <p style={{ color: '#ddd', whiteSpace: 'pre-wrap' }}>{selectedJob.description}</p>
 
-            <div className="modal-actions">
+              {selectedJob.requirements && (
+                <>
+                  <h4 style={{ color: '#4cc3ff', marginTop: '1rem', marginBottom: '0.5rem' }}>Requirements</h4>
+                  <p style={{ color: '#ddd', whiteSpace: 'pre-wrap' }}>{selectedJob.requirements}</p>
+                </>
+              )}
+            </div>
+
+            <hr style={{ borderColor: '#1e2a40', margin: '1rem 0' }} />
+
+            {!showApplyForm ? (
               <button
                 className="modal-btn submit"
-                onClick={handleSubmitResume}
+                onClick={() => setShowApplyForm(true)}
+                style={{ width: '100%', marginBottom: '1rem' }}
               >
-                Submit
+                Apply Now
               </button>
+            ) : (
+              <>
+                <h4 style={{ marginBottom: '0.5rem' }}>Apply for this position</h4>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setResumeFile(e.target.files[0])}
+                  style={{ marginBottom: '1rem' }}
+                />
+              </>
+            )}
+
+            <div className="modal-actions">
+              {showApplyForm && (
+                <button
+                  className="modal-btn submit"
+                  onClick={handleSubmitResume}
+                >
+                  Submit Application
+                </button>
+              )}
               <button
                 className="modal-btn cancel"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false);
+                  setResumeFile(null);
+                  setShowApplyForm(false); // Reset apply form visibility
+                }}
               >
-                Cancel
+                Close
               </button>
             </div>
           </div>

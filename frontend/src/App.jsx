@@ -8,6 +8,8 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import CompanyLogin from "./pages/CompanyLogin";
 import CompanyDashboard from "./pages/CompanyDashboard";
+import PostJob from "./pages/PostJob";
+import CompanyApplications from "./pages/CompanyApplications";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/login/company" element={<CompanyLogin />} />
         <Route path="/company-dashboard" element={<CompanyDashboard />} />
+        <Route path="/post-job" element={<PostJob />} />
+        <Route path="/applications" element={<CompanyApplications />} />
       </Routes>
     </BrowserRouter>
   );

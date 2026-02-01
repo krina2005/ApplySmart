@@ -122,7 +122,7 @@ const CompanyDashboard = () => {
                                 className="form-input"
                             />
                         </div>
-
+                        
                         <div className="grid-2-col">
                             <div className="form-group">
                                 <label className="form-label">Website</label>
