@@ -123,8 +123,19 @@ const UserDashboard = () => {
     }
 
     try {
-      // NOTE: In a real app, upload resumeFile to Supabase Storage first, get URL
-      const fakeResumeUrl = "https://example.com/resume.pdf"; // Mock for now
+      // Upload Resume to Supabase Storage
+      const fileExt = resumeFile.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('resumes')
+        .upload(fileName, resumeFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('resumes')
+        .getPublicUrl(fileName);
 
       const { data, error } = await supabase
         .from('applications')
@@ -132,7 +143,7 @@ const UserDashboard = () => {
           {
             job_id: selectedJob.id,
             user_id: user.id,
-            resume_url: fakeResumeUrl,
+            resume_url: publicUrl,
             status: 'Pending'
           }
         ])

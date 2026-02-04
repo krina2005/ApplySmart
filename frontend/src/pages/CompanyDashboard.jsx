@@ -19,8 +19,11 @@ const CompanyDashboard = () => {
         description: ''
     });
 
+    const [jobs, setJobs] = useState([]);
+    const [selectedJob, setSelectedJob] = useState(null);
+
     useEffect(() => {
-        const getProfile = async () => {
+        const getProfileAndJobs = async () => {
             try {
                 setLoading(true);
                 const { data: { user } } = await supabase.auth.getUser();
@@ -32,19 +35,33 @@ const CompanyDashboard = () => {
                 setUser(user);
 
                 // Fetch profile
-                const { data, error } = await supabase
+                const { data: profileData, error: profileError } = await supabase
                     .from('company_profiles')
                     .select('*')
                     .eq('id', user.id)
                     .single();
 
-                if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows found"
-                    console.error('Error fetching profile:', error);
+                if (profileError && profileError.code !== 'PGRST116') {
+                    console.error('Error fetching profile:', profileError);
                 }
 
-                if (data) {
-                    setProfile(data);
+                if (profileData) {
+                    setProfile(profileData);
                 }
+
+                // Fetch jobs
+                const { data: jobsData, error: jobsError } = await supabase
+                    .from('jobs')
+                    .select('*')
+                    .eq('company_id', user.id)
+                    .order('created_at', { ascending: false });
+
+                if (jobsError) {
+                    console.error('Error fetching jobs:', jobsError);
+                } else {
+                    setJobs(jobsData || []);
+                }
+
             } catch (error) {
                 console.error('Error loading user data:', error.message);
             } finally {
@@ -52,7 +69,7 @@ const CompanyDashboard = () => {
             }
         };
 
-        getProfile();
+        getProfileAndJobs();
     }, [navigate]);
 
     const handleLogout = async () => {
@@ -122,7 +139,7 @@ const CompanyDashboard = () => {
                                 className="form-input"
                             />
                         </div>
-                        
+
                         <div className="grid-2-col">
                             <div className="form-group">
                                 <label className="form-label">Website</label>
@@ -260,6 +277,77 @@ const CompanyDashboard = () => {
                     </div>
                 )}
             </div>
+
+            <div className="posted-jobs-section">
+                <h2 className="section-title">Posted Jobs</h2>
+                {jobs.length > 0 ? (
+                    <div className="jobs-grid">
+                        {jobs.map(job => (
+                            <div
+                                key={job.id}
+                                className="job-card"
+                                onClick={() => setSelectedJob(job)}
+                            >
+                                <div className="job-card-header">
+                                    <h3 className="job-title">{job.title}</h3>
+                                    <span className="job-type-badge">{job.type}</span>
+                                </div>
+                                <div className="job-card-body">
+                                    <p className="job-location">📍 {job.location}</p>
+                                    <p className="job-description-preview">
+                                        {job.description?.substring(0, 100)}...
+                                    </p>
+                                </div>
+                                <div className="job-card-footer">
+                                    <span className="job-date">Posted: {new Date(job.created_at).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="no-jobs-state">
+                        <p>You haven't posted any jobs yet.</p>
+                        <button
+                            onClick={() => navigate('/post-job')}
+                            className="btn-secondary"
+                        >
+                            Post a Job
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {selectedJob && (
+                <div className="modal-overlay" onClick={() => setSelectedJob(null)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="modal-close" onClick={() => setSelectedJob(null)}>×</button>
+
+                        <div className="modal-header">
+                            <h2 className="modal-title">{selectedJob.title}</h2>
+                            <span className="job-type-badge large">{selectedJob.type}</span>
+                        </div>
+
+                        <div className="modal-meta">
+                            <p className="modal-location">📍 {selectedJob.location}</p>
+                            <p className="modal-date">Posted on {new Date(selectedJob.created_at).toLocaleDateString()}</p>
+                        </div>
+
+                        <div className="modal-body">
+                            <div className="modal-section">
+                                <h3>Description</h3>
+                                <p>{selectedJob.description}</p>
+                            </div>
+
+                            {selectedJob.requirements && (
+                                <div className="modal-section">
+                                    <h3>Requirements</h3>
+                                    <p>{selectedJob.requirements}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
