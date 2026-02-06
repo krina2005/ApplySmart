@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
+import Footer from "../components/Footer";
 import "./UserDashboard.css";
 
 const UserDashboard = () => {
@@ -8,6 +9,7 @@ const UserDashboard = () => {
   const [error, setError] = useState(null);
   const [domainFilter, setDomainFilter] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
+  const [expandedCards, setExpandedCards] = useState(new Set()); // Track which cards are expanded
 
   const [applications, setApplications] = useState([]);
   const [user, setUser] = useState(null);
@@ -54,6 +56,8 @@ const UserDashboard = () => {
               id,
               status,
               created_at,
+              score,
+              rank_analysis,
               job_id,
               jobs (
                 title,
@@ -241,23 +245,208 @@ const UserDashboard = () => {
 
         <div className="status-list">
           {filteredApplications.length === 0 && (
-            <p style={{ color: '#aaa', textAlign: 'center' }}>You haven't applied to any jobs yet.</p>
+            <div className="empty-state-card" style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#1e293b', borderRadius: '8px' }}>
+              <p style={{ color: '#94a3b8', marginBottom: '0.5rem' }}>No applications found.</p>
+              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                Your applied jobs will appear here once you submit an application. <br />
+                If you have applied but don't see them, please contact support or check your network connection.
+              </p>
+            </div>
           )}
-          {filteredApplications.map((app) => (
-            <div className="status-card" key={app.id}>
-              <div>
-                <strong>{app.jobs?.title}</strong>
-                <div style={{ fontSize: '0.9em', color: '#ccc' }}>
-                  {app.jobs?.company_profiles?.company_name}
+          {filteredApplications.map((app) => {
+            const hasAIRanking = app.score !== null && app.score !== undefined && app.rank_analysis;
+            const analysis = app.rank_analysis || {};
+            const isExpanded = expandedCards.has(app.id);
+
+            const toggleExpand = () => {
+              setExpandedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(app.id)) {
+                  newSet.delete(app.id);
+                } else {
+                  newSet.add(app.id);
+                }
+                return newSet;
+              });
+            };
+
+            return (
+              <div
+                className="status-card"
+                key={app.id}
+                style={{
+                  padding: '1.5rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onClick={toggleExpand}
+              >
+                <div style={{ width: '100%' }}>
+                  {/* Compact Summary - Always Visible */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ flex: 1 }}>
+                      <strong style={{ fontSize: '1.1em' }}>{app.jobs?.title}</strong>
+                      <div style={{ fontSize: '0.85em', color: '#94a3b8', marginTop: '0.25rem' }}>
+                        {app.jobs?.company_profiles?.company_name}
+                      </div>
+                      {hasAIRanking && (
+                        <div style={{
+                          fontSize: '0.9em',
+                          color: app.score > 70 ? '#4caf50' : app.score > 40 ? '#ff9800' : '#f44336',
+                          fontWeight: 'bold',
+                          marginTop: '0.5rem'
+                        }}>
+                          Match: {app.score}%
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <span
+                        className={`status ${(app.status || 'pending').toLowerCase()}`}
+                        style={{ flexShrink: 0 }}
+                      >
+                        {app.status}
+                      </span>
+                      <span style={{
+                        fontSize: '1.2em',
+                        color: '#64748b',
+                        transition: 'transform 0.2s ease',
+                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                      }}>
+                        ▼
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Expanded Details - Show on Click */}
+                  {isExpanded && hasAIRanking && (
+                    <div style={{
+                      backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                      border: '1px solid rgba(59, 130, 246, 0.2)',
+                      borderRadius: '8px',
+                      padding: '1rem',
+                      marginTop: '1rem'
+                    }}>
+                      <div style={{
+                        fontSize: '0.85em',
+                        color: '#94a3b8',
+                        marginBottom: '0.75rem',
+                        fontWeight: '500'
+                      }}>
+                        Evaluation Details
+                      </div>
+
+                      {/* Skills Breakdown */}
+                      {analysis.matched_skills && analysis.matched_skills.length > 0 && (
+                        <div style={{ marginBottom: '1rem' }}>
+                          <div style={{ fontSize: '0.85em', color: '#cbd5e1', marginBottom: '0.5rem' }}>
+                            ✓ Skills Match: <span style={{ color: '#4caf50', fontWeight: 'bold' }}>
+                              {analysis.skill_score}%
+                            </span>
+                          </div>
+                          <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '0.5rem',
+                            marginBottom: '0.5rem'
+                          }}>
+                            {analysis.matched_skills.slice(0, 5).map((skill, idx) => (
+                              <span key={idx} style={{
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                color: '#4caf50',
+                                padding: '0.25rem 0.5rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75em',
+                                border: '1px solid rgba(76, 175, 80, 0.3)'
+                              }}>
+                                {skill}
+                              </span>
+                            ))}
+                            {analysis.matched_skills.length > 5 && (
+                              <span style={{ fontSize: '0.75em', color: '#64748b', alignSelf: 'center' }}>
+                                +{analysis.matched_skills.length - 5} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Missing Skills */}
+                      {analysis.missing_skills && analysis.missing_skills.length > 0 && (
+                        <div style={{ marginBottom: '1rem' }}>
+                          <div style={{ fontSize: '0.85em', color: '#cbd5e1', marginBottom: '0.5rem' }}>
+                            Missing Skills
+                          </div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            {analysis.missing_skills.slice(0, 4).map((skill, idx) => (
+                              <span key={idx} style={{
+                                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                                color: '#f44336',
+                                padding: '0.25rem 0.5rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75em',
+                                border: '1px solid rgba(244, 67, 54, 0.3)'
+                              }}>
+                                {skill}
+                              </span>
+                            ))}
+                            {analysis.missing_skills.length > 4 && (
+                              <span style={{ fontSize: '0.75em', color: '#64748b', alignSelf: 'center' }}>
+                                +{analysis.missing_skills.length - 4} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Additional Metrics */}
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '0.75rem',
+                        paddingTop: '0.75rem',
+                        borderTop: '1px solid rgba(148, 163, 184, 0.1)'
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.75em', color: '#94a3b8' }}>Contextual Fit</div>
+                          <div style={{ fontSize: '0.9em', fontWeight: 'bold', color: '#e2e8f0' }}>
+                            {analysis.semantic_score}%
+                          </div>
+                        </div>
+                        {analysis.experience_years !== undefined && (
+                          <div>
+                            <div style={{ fontSize: '0.75em', color: '#94a3b8' }}>Experience</div>
+                            <div style={{ fontSize: '0.9em', fontWeight: 'bold', color: '#e2e8f0' }}>
+                              {analysis.experience_years} {analysis.experience_years === 1 ? 'year' : 'years'}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pending Evaluation - Show when expanded and no ranking */}
+                  {isExpanded && !hasAIRanking && (
+                    <div style={{
+                      backgroundColor: 'rgba(148, 163, 184, 0.05)',
+                      border: '1px solid rgba(148, 163, 184, 0.2)',
+                      borderRadius: '8px',
+                      padding: '1rem',
+                      marginTop: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontSize: '0.9em', color: '#94a3b8' }}>
+                        ⏳ Pending Evaluation
+                      </div>
+                      <div style={{ fontSize: '0.75em', color: '#64748b', marginTop: '0.25rem' }}>
+                        AI ranking will appear once the company reviews applications
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-              <span
-                className={`status ${app.status.toLowerCase()}`}
-              >
-                {app.status}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -328,8 +517,10 @@ const UserDashboard = () => {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+      <Footer />
+    </div >
   );
 };
 

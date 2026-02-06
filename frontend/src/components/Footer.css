@@ -1,0 +1,35 @@
+.app-footer {
+    background: linear-gradient(180deg, #0a1423, #050b16);
+    border-top: 1px solid rgba(76, 195, 255, 0.2);
+    padding: 2rem 1.5rem;
+    margin-top: 4rem;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-content p {
+    color: #8fb6d9;
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+}
+
+.footer-tagline {
+    color: #6c8a99;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .app-footer {
+        padding: 1.5rem 1rem;
+    }
+    
+    .footer-content p {
+        font-size: 0.85rem;
+    }
+}

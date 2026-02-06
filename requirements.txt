@@ -4,3 +4,8 @@ python-dotenv
 google-genai
 PyPDF2
 python-multipart
+sentence-transformers
+scikit-learn
+numpy
+spacy
+supabase

@@ -56,8 +56,6 @@ const Navbar = () => {
           <>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/upload">Check your match</Link></li>
-            <li><Link to="#">Apply</Link></li>
-            <li><Link to="#">Status</Link></li>
             <li><Link to="/user-dashboard">Dashboard</Link></li>
           </>
         ) : displayRole === 'company' ? (
