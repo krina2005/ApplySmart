@@ -1,5 +1,51 @@
+# Python
 __pycache__/
-.env
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
 venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+debug_*.log
+
+# Test files
+test_*.py
+*_test.py
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+# Temporary files
+*.tmp
+*.temp
+*.pdf
+*.docx
+
+# Database
+*.db
+*.sqlite

@@ -1,15 +1,372 @@
+# Programming Languages
 python
-flask
-django
-sql
-git
-rest api
-docker
-aws
-html
-css
+java
 javascript
-machine learning
-data preprocessing
-feature engineering
+typescript
+c++
+c#
+c
+go
+golang
+rust
+ruby
+php
+swift
+kotlin
+scala
+r
+matlab
+perl
+shell scripting
+bash
+powershell
+
+# Web Development - Frontend
+html
+html5
+css
+css3
+sass
+scss
+less
+react
+reactjs
+react.js
+angular
+angularjs
+vue
+vue.js
+vuejs
+next.js
+nextjs
+nuxt.js
+svelte
+jquery
+bootstrap
+tailwind css
+material ui
+redux
+webpack
+vite
+babel
+
+# Web Development - Backend
+node.js
+nodejs
+express
+express.js
+django
+flask
+fastapi
+spring
+spring boot
+asp.net
+.net core
+laravel
+rails
+ruby on rails
+nestjs
+
+# Mobile Development
+react native
+flutter
+android
+ios
+swift
+kotlin
+xamarin
+ionic
+cordova
+
+# Database
+sql
+mysql
+postgresql
+mongodb
+redis
+cassandra
+dynamodb
+oracle
+sql server
+sqlite
+mariadb
+elasticsearch
+neo4j
+couchdb
+firebase
+
+# Cloud & DevOps
+aws
+amazon web services
+azure
+microsoft azure
+google cloud
+gcp
+docker
+kubernetes
+k8s
+jenkins
+gitlab ci
+github actions
+terraform
+ansible
+chef
+puppet
+circleci
+travis ci
 cloud deployment
+cloud computing
+serverless
+lambda
+
+# Data Science & AI/ML
+machine learning
+deep learning
+artificial intelligence
+ai
+ml
+data science
+data analysis
+pandas
+numpy
+scipy
+scikit-learn
+sklearn
+tensorflow
+pytorch
+keras
+opencv
+nlp
+natural language processing
+computer vision
+data visualization
+matplotlib
+seaborn
+plotly
+jupyter
+tableau
+power bi
+
+# Big Data
+hadoop
+spark
+apache spark
+kafka
+apache kafka
+hive
+pig
+flink
+airflow
+databricks
+
+# Version Control
+git
+github
+gitlab
+bitbucket
+svn
+version control
+
+# API & Integration
+rest api
+restful api
+graphql
+soap
+api development
+api integration
+microservices
+websocket
+grpc
+
+# Testing
+unit testing
+integration testing
+test automation
+selenium
+jest
+mocha
+chai
+pytest
+junit
+testng
+cypress
+playwright
+
+# Software Development
+agile
+scrum
+kanban
+jira
+confluence
+software development
+sdlc
+ci/cd
+continuous integration
+continuous deployment
+tdd
+test driven development
+design patterns
+object oriented programming
+oop
+functional programming
+solid principles
+
+# Security
+cybersecurity
+information security
+penetration testing
+ethical hacking
+owasp
+ssl
+tls
+encryption
+authentication
+authorization
+oauth
+jwt
+security testing
+
+# Networking
+tcp/ip
+http
+https
+dns
+networking
+network protocols
+load balancing
+cdn
+nginx
+apache
+
+# Operating Systems
+linux
+unix
+windows
+macos
+ubuntu
+centos
+debian
+red hat
+
+# Containers & Orchestration
+docker
+kubernetes
+docker compose
+helm
+openshift
+rancher
+
+# Message Queues
+rabbitmq
+kafka
+redis
+activemq
+amazon sqs
+
+# Monitoring & Logging
+prometheus
+grafana
+elk stack
+elasticsearch
+logstash
+kibana
+splunk
+datadog
+new relic
+
+# Blockchain
+blockchain
+ethereum
+solidity
+smart contracts
+web3
+cryptocurrency
+
+# Game Development
+unity
+unreal engine
+game development
+3d modeling
+blender
+
+# UI/UX
+ui design
+ux design
+figma
+sketch
+adobe xd
+wireframing
+prototyping
+user experience
+user interface
+
+# Project Management
+project management
+agile methodology
+scrum master
+product management
+stakeholder management
+
+# Soft Skills
+problem solving
+analytical thinking
+communication
+teamwork
+leadership
+time management
+critical thinking
+collaboration
+
+# Tools & IDEs
+visual studio code
+vscode
+intellij idea
+pycharm
+eclipse
+sublime text
+atom
+vim
+emacs
+postman
+insomnia
+
+# CMS & E-commerce
+wordpress
+drupal
+joomla
+magento
+shopify
+woocommerce
+
+# Data Engineering
+data engineering
+etl
+data pipeline
+data warehousing
+data modeling
+apache airflow
+dbt
+
+# System Design
+system design
+distributed systems
+scalability
+high availability
+load balancing
+caching
+database design
+architecture
+
+# Other Technologies
+xml
+json
+yaml
+markdown
+regex
+regular expressions
+webscraping
+beautiful soup
+scrapy
+selenium
+automation
+rpa
