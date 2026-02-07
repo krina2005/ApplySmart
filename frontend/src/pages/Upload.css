@@ -1,7 +1,7 @@
 /* Upload.css */
 .upload-page {
   min-height: calc(100vh - 64px);
-  padding: 40px 20px;
+  padding: 30px 40px 20px;
   background: radial-gradient(circle at top center, #1e293b 0%, #020617 70%);
   display: flex;
   justify-content: center;
@@ -15,7 +15,7 @@
 
 .header-section {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .page-title {
@@ -37,7 +37,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 }
 
 /* Glass Card Style */
@@ -81,7 +81,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   background: rgba(15, 23, 42, 0.3);
-  min-height: 250px;
+  min-height: 220px;
 }
 
 .drop-zone:hover, .drop-zone.active {
@@ -91,8 +91,10 @@
 }
 
 .upload-icon-large {
-  font-size: 4rem;
+  width: 64px;
+  height: 64px;
   margin-bottom: 16px;
+  color: var(--accent);
   filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
 }
 
@@ -142,7 +144,7 @@
 .analyze-button {
   background: linear-gradient(90deg, #38bdf8, #2563eb);
   color: white;
-  padding: 18px 48px;
+  padding: 16px 44px;
   font-size: 1.1rem;
   font-weight: 700;
   border-radius: 50px;
