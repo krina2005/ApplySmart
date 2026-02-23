@@ -9,71 +9,70 @@ const CompanyApplications = () => {
     const [loading, setLoading] = useState(true);
     const [jobsWithApps, setJobsWithApps] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) {
-                    navigate("/login/company");
-                    return;
-                }
-
-                // 1. Fetch Company's Jobs
-                const { data: jobs, error: jobsError } = await supabase
-                    .from('jobs')
-                    .select('id, title, created_at')
-                    .eq('company_id', user.id)
-                    .order('created_at', { ascending: false });
-
-                if (jobsError) throw jobsError;
-
-                // 2. Fetch Applications for these jobs
-                // We can use the 'in' filter regarding job_id
-                const jobIds = jobs.map(j => j.id);
-
-                if (jobIds.length === 0) {
-                    setJobsWithApps([]);
-                    setLoading(false);
-                    return;
-                }
-
-                const { data: applications, error: appsError } = await supabase
-                    .from('applications')
-                    .select(`
-                        id,
-                        user_id,
-                        resume_url,
-                        status,
-                        created_at,
-                        job_id,
-                        score
-                    `)
-                    .in('job_id', jobIds)
-                    .order('created_at', { ascending: false });
-
-                if (appsError) throw appsError;
-
-                // 3. Group Applications by Job
-                const grouped = jobs.map(job => {
-                    const jobApps = applications.filter(app => app.job_id === job.id);
-                    return {
-                        ...job,
-                        applications: jobApps
-                    };
-                });
-
-                setJobsWithApps(grouped);
-
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false);
+    // Function to fetch applications data
+    const fetchApplicationsData = async () => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                navigate("/login/company");
+                return;
             }
-        };
 
+            // 1. Fetch Company's Jobs
+            const { data: jobs, error: jobsError } = await supabase
+                .from('jobs')
+                .select('id, title, created_at')
+                .eq('company_id', user.id)
+                .order('created_at', { ascending: false });
 
+            if (jobsError) throw jobsError;
 
-        fetchData();
+            // 2. Fetch Applications for these jobs
+            // We can use the 'in' filter regarding job_id
+            const jobIds = jobs.map(j => j.id);
+
+            if (jobIds.length === 0) {
+                setJobsWithApps([]);
+                setLoading(false);
+                return;
+            }
+
+            const { data: applications, error: appsError } = await supabase
+                .from('applications')
+                .select(`
+                    id,
+                    user_id,
+                    resume_url,
+                    status,
+                    created_at,
+                    job_id,
+                    score
+                `)
+                .in('job_id', jobIds)
+                .order('created_at', { ascending: false });
+
+            if (appsError) throw appsError;
+
+            // 3. Group Applications by Job
+            const grouped = jobs.map(job => {
+                const jobApps = applications.filter(app => app.job_id === job.id);
+                return {
+                    ...job,
+                    applications: jobApps
+                };
+            });
+
+            setJobsWithApps(grouped);
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchApplicationsData();
 
         // Real-time subscription for application updates
         const subscription = supabase
@@ -188,6 +187,8 @@ const CompanyApplications = () => {
                                                             const data = await res.json();
                                                             if (data.status === 'success') {
                                                                 alert(`Ranking complete! Processed ${data.ranked_count} application${data.ranked_count !== 1 ? 's' : ''}.`);
+                                                                // Refresh the data to show updated scores
+                                                                await fetchApplicationsData();
                                                             } else {
                                                                 alert("Error: " + data.message);
                                                             }
