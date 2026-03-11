@@ -1,0 +1,208 @@
+.admin-container {
+  padding: 60px 40px;
+  color: #ffffff;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Title */
+.admin-container h1 {
+  font-size: 2.4rem;
+  margin-bottom: 30px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Header */
+.admin-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
+  flex-wrap:wrap;
+}
+
+/* Title */
+.admin-title{
+  font-size:2.4rem;
+  font-weight:700;
+  margin-bottom:6px;
+  background:linear-gradient(90deg,#4cc3ff,#00eeff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Subtitle */
+.admin-subtitle{
+  color:#8fb6d9;
+  font-size:0.95rem;
+}
+
+/* Stats cards */
+.admin-stats{
+  display:flex;
+  gap:15px;
+}
+
+.stat-card{
+  background:linear-gradient(145deg,#0e1b2f,#0a1423);
+  border:1px solid #1e2a40;
+  border-radius:10px;
+  padding:12px 18px;
+  text-align:center;
+  min-width:90px;
+  box-shadow:0 0 20px rgba(76,195,255,0.05);
+}
+
+.stat-card span{
+  font-size:1.4rem;
+  font-weight:700;
+  color:#4cc3ff;
+}
+
+.stat-card p{
+  font-size:0.8rem;
+  color:#8fb6d9;
+}
+
+/* Table Wrapper */
+.company-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: linear-gradient(180deg,#0e1b2f,#0a1423);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+/* Table Head */
+.company-table thead {
+  background: #13263f;
+}
+
+.company-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #4cc3ff;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #1e2a40;
+}
+
+/* Table Body */
+.company-table td {
+  padding: 16px;
+  border-bottom: 1px solid #1e2a40;
+  color: #d6e2f0;
+  font-size: 0.95rem;
+}
+
+/* Row Hover */
+.company-table tbody tr {
+  transition: all 0.25s ease;
+}
+
+.company-table tbody tr:hover {
+  background: rgba(76,195,255,0.05);
+  transform: translateX(4px);
+}
+
+/* Website Links */
+.company-table a {
+  color: #4cc3ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.company-table a:hover {
+  text-decoration: underline;
+}
+
+/* Remove Button */
+.delete-btn {
+  background: #ff6b6b;
+  border: none;
+  padding: 7px 16px;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #ff4b4b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255,75,75,0.4);
+}
+
+/* Empty state */
+.empty-row td {
+  text-align: center;
+  padding: 40px;
+  color: #8fb6d9;
+}
+
+/* Responsive Table */
+@media (max-width: 900px) {
+
+  .company-table thead {
+    display: none;
+  }
+
+  .company-table,
+  .company-table tbody,
+  .company-table tr,
+  .company-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .company-table tr {
+    margin-bottom: 18px;
+    background: #0e1b2f;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #1e2a40;
+  }
+
+  .company-table td {
+    border: none;
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .company-table td::before {
+    font-weight: 600;
+    color: #4cc3ff;
+  }
+
+  .company-table td:nth-child(1)::before { content: "Company"; }
+  .company-table td:nth-child(2)::before { content: "Industry"; }
+  .company-table td:nth-child(3)::before { content: "Location"; }
+  .company-table td:nth-child(4)::before { content: "Website"; }
+  .company-table td:nth-child(5)::before { content: "Action"; }
+}
+
+.search-container{
+  margin-bottom:20px;
+}
+
+.search-input{
+  width:280px;
+  padding:10px 14px;
+  border-radius:8px;
+  border:1px solid #1e2a40;
+  background:#0c1626;
+  color:white;
+  font-size:0.9rem;
+}
+
+.search-input:focus{
+  outline:none;
+  border-color:#4cc3ff;
+  box-shadow:0 0 6px rgba(76,195,255,0.3);
+}
