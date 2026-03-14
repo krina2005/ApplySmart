@@ -12,13 +12,11 @@ const CompanyLogin = () => {
     const navigate = useNavigate();
 
     const validateEmail = (email) => {
-        // Basic email regex
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     };
 
     const validatePassword = (password) => {
-        // Password must be at least 6 characters
         return password.length >= 6;
     };
 
@@ -26,7 +24,7 @@ const CompanyLogin = () => {
         e.preventDefault();
         setLoading(true);
 
-        // Validation
+        // ── Validation ─────────────────────────────────────
         if (!validateEmail(email)) {
             alert("Please enter a valid email address.");
             setLoading(false);
@@ -48,15 +46,15 @@ const CompanyLogin = () => {
 
         try {
             if (isLogin) {
-                // Login Logic
+                // ── LOGIN ──────────────────────────────────────
                 const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
+                    email,
+                    password,
                 });
 
                 if (error) throw error;
 
-                // Role Check
+                // Role check
                 const role = data.user?.user_metadata?.role;
                 if (role !== 'company') {
                     await supabase.auth.signOut();
@@ -65,30 +63,64 @@ const CompanyLogin = () => {
                     return;
                 }
 
-                alert("Logged in successfully as Company!");
-                console.log("Logged in user:", data.user);
-                window.open('/company-dashboard', '_blank'); // Open Company Dashboard in new tab
+                // ── Ban check (banned companies cannot access at all) ──
+                const { data: profileData, error: profileError } = await supabase
+                    .from('company_profiles')
+                    .select('is_approved, is_banned')
+                    .eq('id', data.user.id)
+                    .single();
+
+                if (profileError && profileError.code !== 'PGRST116') {
+                    console.warn("Profile fetch error:", profileError);
+                }
+
+                if (profileData?.is_banned) {
+                    await supabase.auth.signOut();
+                    alert(
+                        "⛔ Your company account has been removed by the admin.\n" +
+                        "You can no longer access this platform."
+                    );
+                    setLoading(false);
+                    return;
+                }
+
+                // Pending companies can log in — they'll see a banner on the dashboard
+                alert("✅ Logged in successfully as Company!");
+                window.open('/company-dashboard', '_blank');
 
             } else {
-                // Sign Up Logic
+                // ── SIGN UP ────────────────────────────────────
                 const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
+                    email,
+                    password,
                     options: {
-                        data: {
-                            role: 'company',
-                        },
+                        data: { role: 'company' },
                     },
                 });
 
                 if (error) throw error;
-                if (!data.session) {
-                    alert("Account created! Please verify your email before logging in.");
-                } else {
-                    alert("Account created and logged in!");
-                    window.open('/company-dashboard', '_blank'); // Open Company Dashboard in new tab if session exists
+
+                // Create a placeholder profile row with is_approved = false
+                if (data.user) {
+                    const { error: insertError } = await supabase
+                        .from('company_profiles')
+                        .upsert({
+                            id: data.user.id,
+                            is_approved: false,
+                            is_banned: false,
+                            updated_at: new Date().toISOString(),
+                        }, { onConflict: 'id' });
+
+                    if (insertError) {
+                        console.warn("Could not create initial profile:", insertError.message);
+                    }
                 }
-                console.log("Signed up user:", data.user);
+
+                alert(
+                    "🎉 Account created!\n\n" +
+                    "Your registration is now pending admin approval.\n" +
+                    "You will be able to log in once an admin approves your account."
+                );
             }
         } catch (error) {
             if (error.message.includes("User already registered")) {
@@ -106,8 +138,25 @@ const CompanyLogin = () => {
             <div className="login-card">
                 <h2 className="login-title">{isLogin ? 'Company Login' : 'Company Sign Up'}</h2>
                 <p className="login-subtitle">
-                    {isLogin ? 'Welcome back! Please login to continue.' : 'Create a new company account.'}
+                    {isLogin
+                        ? 'Welcome back! Please login to continue.'
+                        : 'Register your company — approval required.'}
                 </p>
+
+                {!isLogin && (
+                    <div style={{
+                        background: 'rgba(255, 217, 102, 0.08)',
+                        border: '1px solid rgba(255, 217, 102, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 14px',
+                        marginBottom: '16px',
+                        fontSize: '0.85rem',
+                        color: '#ffd966',
+                        lineHeight: '1.4'
+                    }}>
+                        ⚠️ After signing up, your account must be approved by an admin before you can log in.
+                    </div>
+                )}
 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <div className="form-group">

@@ -5,9 +5,13 @@ import "./AdminDashboard.css";
 const AdminDashboard = () => {
   const [companies, setCompanies] = useState([]);
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("pending"); // "pending" | "approved" | "banned"
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null); // id of company being acted on
 
-  // FETCH COMPANIES FROM SUPABASE
+  // ── FETCH ──────────────────────────────────────────────
   const fetchCompanies = async () => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("company_profiles")
       .select("*")
@@ -16,55 +20,183 @@ const AdminDashboard = () => {
     if (error) {
       console.error("Error fetching companies:", error);
     } else {
-      setCompanies(data);
+      setCompanies(data || []);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchCompanies();
   }, []);
 
-  // DELETE COMPANY
-  const deleteCompany = async (id) => {
-    if (!window.confirm("Remove this company?")) return;
+  // ── ACTIONS ─────────────────────────────────────────────
 
+  const approveCompany = async (id) => {
+    setActionLoading(id);
     const { error } = await supabase
       .from("company_profiles")
-      .delete()
+      .update({ is_approved: true, is_banned: false })
       .eq("id", id);
 
     if (error) {
-      console.error("Error deleting company:", error);
+      alert("Error approving company: " + error.message);
     } else {
-      setCompanies(companies.filter(c => c.id !== id));
+      setCompanies((prev) =>
+        prev.map((c) =>
+          c.id === id ? { ...c, is_approved: true, is_banned: false } : c
+        )
+      );
     }
+    setActionLoading(null);
   };
 
-  // SEARCH FILTER
-  const filteredCompanies = companies.filter(company =>
-    company.company_name?.toLowerCase().includes(search.toLowerCase())
+  const rejectCompany = async (id, name) => {
+    if (!window.confirm(`Reject "${name}"? They will NOT be able to log in.`)) return;
+    setActionLoading(id);
+    const { error } = await supabase
+      .from("company_profiles")
+      .update({ is_approved: false, is_banned: true })
+      .eq("id", id);
+
+    if (error) {
+      alert("Error rejecting company: " + error.message);
+    } else {
+      setCompanies((prev) =>
+        prev.map((c) =>
+          c.id === id ? { ...c, is_approved: false, is_banned: true } : c
+        )
+      );
+    }
+    setActionLoading(null);
+  };
+
+  const removeCompany = async (id, name) => {
+    if (
+      !window.confirm(
+        `Remove "${name}" from the platform?\n\nThey will be banned and cannot log in again.`
+      )
+    )
+      return;
+
+    setActionLoading(id);
+    const { error } = await supabase
+      .from("company_profiles")
+      .update({ is_approved: false, is_banned: true })
+      .eq("id", id);
+
+    if (error) {
+      alert("Error removing company: " + error.message);
+    } else {
+      setCompanies((prev) =>
+        prev.map((c) =>
+          c.id === id ? { ...c, is_approved: false, is_banned: true } : c
+        )
+      );
+      // Switch to banned tab so admin can see the result
+      setActiveTab("banned");
+    }
+    setActionLoading(null);
+  };
+
+  const restoreCompany = async (id) => {
+    setActionLoading(id);
+    const { error } = await supabase
+      .from("company_profiles")
+      .update({ is_approved: true, is_banned: false })
+      .eq("id", id);
+
+    if (error) {
+      alert("Error restoring company: " + error.message);
+    } else {
+      setCompanies((prev) =>
+        prev.map((c) =>
+          c.id === id ? { ...c, is_approved: true, is_banned: false } : c
+        )
+      );
+      setActiveTab("approved");
+    }
+    setActionLoading(null);
+  };
+
+  // ── DERIVED DATA ─────────────────────────────────────────
+  const pending  = companies.filter((c) => !c.is_approved && !c.is_banned);
+  const approved = companies.filter((c) => c.is_approved  && !c.is_banned);
+  const banned   = companies.filter((c) => c.is_banned);
+
+  const tabList =
+    activeTab === "pending"
+      ? pending
+      : activeTab === "approved"
+      ? approved
+      : banned;
+
+  const filtered = tabList.filter((c) =>
+    c.company_name?.toLowerCase().includes(search.toLowerCase())
   );
 
+  // ── RENDER ───────────────────────────────────────────────
   return (
     <div className="admin-container">
 
+      {/* ── HEADER ── */}
       <div className="admin-header">
         <div>
           <h1 className="admin-title">Admin Dashboard</h1>
           <p className="admin-subtitle">
-            Manage registered companies and control platform access
+            Manage company registrations and control platform access
           </p>
         </div>
 
         <div className="admin-stats">
           <div className="stat-card">
-            <span>{companies.length}</span>
-            <p>Companies</p>
+            <span className="stat-num pending-num">{pending.length}</span>
+            <p>Pending</p>
+          </div>
+          <div className="stat-card">
+            <span className="stat-num approved-num">{approved.length}</span>
+            <p>Approved</p>
+          </div>
+          <div className="stat-card">
+            <span className="stat-num banned-num">{banned.length}</span>
+            <p>Banned</p>
+          </div>
+          <div className="stat-card">
+            <span className="stat-num">{companies.length}</span>
+            <p>Total</p>
           </div>
         </div>
       </div>
 
-      {/* SEARCH BAR */}
+      {/* ── TABS ── */}
+      <div className="admin-tabs">
+        <button
+          className={`admin-tab ${activeTab === "pending" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("pending")}
+        >
+          ⏳ Pending Approval
+          {pending.length > 0 && (
+            <span className="tab-badge pending-badge">{pending.length}</span>
+          )}
+        </button>
+        <button
+          className={`admin-tab ${activeTab === "approved" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("approved")}
+        >
+          ✅ Approved
+          <span className="tab-badge approved-badge">{approved.length}</span>
+        </button>
+        <button
+          className={`admin-tab ${activeTab === "banned" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("banned")}
+        >
+          🚫 Banned
+          {banned.length > 0 && (
+            <span className="tab-badge banned-badge">{banned.length}</span>
+          )}
+        </button>
+      </div>
+
+      {/* ── SEARCH ── */}
       <div className="search-container">
         <input
           type="text"
@@ -73,59 +205,115 @@ const AdminDashboard = () => {
           onChange={(e) => setSearch(e.target.value)}
           className="search-input"
         />
+        <button className="refresh-btn" onClick={fetchCompanies} title="Refresh">
+          ↻
+        </button>
       </div>
 
-      <table className="company-table">
-        <thead>
-          <tr>
-            <th>Company</th>
-            <th>Industry</th>
-            <th>Location</th>
-            <th>Website</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          {filteredCompanies.length === 0 ? (
+      {/* ── TABLE ── */}
+      {loading ? (
+        <div className="admin-loading">Loading companies…</div>
+      ) : (
+        <table className="company-table">
+          <thead>
             <tr>
-              <td colSpan="5" className="empty-row">
-                No companies found
-              </td>
+              <th>Company</th>
+              <th>Industry</th>
+              <th>Location</th>
+              <th>Website</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ) : (
-            filteredCompanies.map(company => (
-              <tr key={company.id}>
-                <td>{company.company_name}</td>
-                <td>{company.industry}</td>
-                <td>{company.location}</td>
-
-                <td>
-                  {company.website ? (
-                    <a href={company.website} target="_blank" rel="noreferrer">
-                      {company.website}
-                    </a>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-
-                <td>
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteCompany(company.id)}
-                  >
-                    Remove
-                  </button>
+          </thead>
+          <tbody>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="empty-row">
+                  {search
+                    ? "No companies match your search"
+                    : activeTab === "pending"
+                    ? "No companies awaiting approval 🎉"
+                    : activeTab === "approved"
+                    ? "No approved companies yet"
+                    : "No banned companies"}
                 </td>
               </tr>
-            ))
-          )}
+            ) : (
+              filtered.map((company) => (
+                <tr key={company.id} className={actionLoading === company.id ? "row-loading" : ""}>
+                  <td className="td-company">
+                    <span className="company-name-text">{company.company_name || "—"}</span>
+                    <span className="company-email-text">{company.email || ""}</span>
+                  </td>
+                  <td>{company.industry || "—"}</td>
+                  <td>{company.location || "—"}</td>
+                  <td>
+                    {company.website ? (
+                      <a href={company.website} target="_blank" rel="noreferrer">
+                        {company.website.replace(/^https?:\/\//, "")}
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td>
+                    {company.is_banned ? (
+                      <span className="badge badge-banned">Banned</span>
+                    ) : company.is_approved ? (
+                      <span className="badge badge-approved">Approved</span>
+                    ) : (
+                      <span className="badge badge-pending">Pending</span>
+                    )}
+                  </td>
+                  <td className="action-cell">
+                    {/* PENDING → Approve or Reject */}
+                    {!company.is_approved && !company.is_banned && (
+                      <>
+                        <button
+                          className="approve-btn"
+                          onClick={() => approveCompany(company.id)}
+                          disabled={actionLoading === company.id}
+                        >
+                          {actionLoading === company.id ? "…" : "Approve"}
+                        </button>
+                        <button
+                          className="reject-btn"
+                          onClick={() => rejectCompany(company.id, company.company_name)}
+                          disabled={actionLoading === company.id}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
 
-        </tbody>
-      </table>
+                    {/* APPROVED → Remove */}
+                    {company.is_approved && !company.is_banned && (
+                      <button
+                        className="delete-btn"
+                        onClick={() => removeCompany(company.id, company.company_name)}
+                        disabled={actionLoading === company.id}
+                      >
+                        {actionLoading === company.id ? "…" : "Remove"}
+                      </button>
+                    )}
 
+                    {/* BANNED → Restore */}
+                    {company.is_banned && (
+                      <button
+                        className="restore-btn"
+                        onClick={() => restoreCompany(company.id)}
+                        disabled={actionLoading === company.id}
+                      >
+                        {actionLoading === company.id ? "…" : "Restore"}
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

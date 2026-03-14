@@ -9,6 +9,7 @@ const CompanyDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [user, setUser] = useState(null);
+    const [isApproved, setIsApproved] = useState(true); // assume approved until we know otherwise
 
     // Profile State
     const [profile, setProfile] = useState({
@@ -48,6 +49,7 @@ const CompanyDashboard = () => {
 
                 if (profileData) {
                     setProfile(profileData);
+                    setIsApproved(profileData.is_approved === true);
                 }
 
                 // Fetch jobs
@@ -113,6 +115,34 @@ const CompanyDashboard = () => {
 
     return (
         <div className="company-dashboard-container">
+
+            {/* ── Pending Approval Banner ── */}
+            {!isApproved && (
+                <div style={{
+                    background: 'linear-gradient(135deg, rgba(255,217,102,0.12), rgba(255,170,0,0.08))',
+                    border: '1px solid rgba(255,217,102,0.4)',
+                    borderRadius: '12px',
+                    padding: '16px 20px',
+                    marginBottom: '24px',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '14px',
+                    color: '#ffd966'
+                }}>
+                    <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>⏳</span>
+                    <div>
+                        <div style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '4px' }}>
+                            Account Pending Admin Approval
+                        </div>
+                        <div style={{ fontSize: '0.88rem', color: '#c9a940', lineHeight: 1.5 }}>
+                            You can set up your profile and explore, but your job postings will
+                            <strong> not be visible to applicants</strong> until an admin approves your account.
+                            Please allow some time for review.
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="dashboard-card">
                 <div className="card-header">
                     <h2 className="card-title">Company Profile</h2>

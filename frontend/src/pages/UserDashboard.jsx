@@ -68,13 +68,20 @@ const UserDashboard = () => {
             company_profiles (
               company_name,
               industry,
-              website
+              website,
+              is_approved,
+              is_banned
             )
           `)
           .order('created_at', { ascending: false });
 
         if (jobsError) throw jobsError;
-        setJobs(jobsData || []);
+
+        // Only show jobs from approved (non-banned) companies
+        const approvedJobs = (jobsData || []).filter(
+          (j) => j.company_profiles?.is_approved === true && !j.company_profiles?.is_banned
+        );
+        setJobs(approvedJobs);
 
         if (user) {
           const { data: appsData, error: appsError } = await supabase
