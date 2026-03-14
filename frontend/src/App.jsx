@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import UserLogin from "./pages/UserLogin";
 import AdminLogin from "./pages/AdminLogin";
@@ -20,17 +21,62 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login/user" element={<UserLogin />} />
         <Route path="/login/admin" element={<AdminLogin />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/user-dashboard" element={<UserDashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/login/company" element={<CompanyLogin />} />
-        <Route path="/company-dashboard" element={<CompanyDashboard />} />
-        <Route path="/post-job" element={<PostJob />} />
-        <Route path="/applications" element={<CompanyApplications />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/upload" element={<Upload />} />
+
+        {/* USER PROTECTED ROUTES */}
+        <Route
+          path="/user-dashboard"
+          element={
+            <ProtectedRoute role="user">
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* COMPANY PROTECTED ROUTES */}
+        <Route
+          path="/company-dashboard"
+          element={
+            <ProtectedRoute role="company">
+              <CompanyDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/post-job"
+          element={
+            <ProtectedRoute role="company">
+              <PostJob />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/applications"
+          element={
+            <ProtectedRoute role="company">
+              <CompanyApplications />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ADMIN PROTECTED ROUTES */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
+
