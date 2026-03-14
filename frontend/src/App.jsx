@@ -10,6 +10,7 @@ import CompanyLogin from "./pages/CompanyLogin";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import PostJob from "./pages/PostJob";
 import CompanyApplications from "./pages/CompanyApplications";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/company-dashboard" element={<CompanyDashboard />} />
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/applications" element={<CompanyApplications />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

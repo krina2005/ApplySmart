@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginShared.css';
@@ -12,13 +13,11 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
-    // Basic email regex
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
 
   const validatePassword = (password) => {
-    // Password must be at least 6 characters
     return password.length >= 6;
   };
 
@@ -26,7 +25,6 @@ const UserLogin = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Validation
     if (!validateEmail(email)) {
       alert("Please enter a valid email address.");
       setLoading(false);
@@ -48,7 +46,6 @@ const UserLogin = () => {
 
     try {
       if (isLogin) {
-        // Login Logic
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
@@ -56,7 +53,6 @@ const UserLogin = () => {
 
         if (error) throw error;
 
-        // Role Check
         const role = data.user?.user_metadata?.role;
         if (role !== 'user') {
           await supabase.auth.signOut();
@@ -67,10 +63,10 @@ const UserLogin = () => {
 
         alert("Logged in successfully as User!");
         console.log("Logged in user:", data.user);
-        window.open('/user-dashboard', '_blank'); // Open User Dashboard in new tab
+        window.open('/user-dashboard', '_blank');
 
       } else {
-        // Sign Up Logic
+
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
@@ -82,14 +78,17 @@ const UserLogin = () => {
         });
 
         if (error) throw error;
+
         if (!data.session) {
           alert("Account created! Please verify your email before logging in.");
         } else {
           alert("Account created and logged in!");
-          window.open('/user-dashboard', '_blank'); // Open User Dashboard in new tab if session exists
+          window.open('/user-dashboard', '_blank');
         }
+
         console.log("Signed up user:", data.user);
       }
+
     } catch (error) {
       if (error.message.includes("User already registered")) {
         alert("This email is already registered. Please login or use a different email.");
@@ -98,6 +97,23 @@ const UserLogin = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      alert("Please enter your email first.");
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "http://localhost:5173/reset-password",
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Password reset email sent! Check your inbox.");
     }
   };
 
@@ -130,6 +146,15 @@ const UserLogin = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+
+            {isLogin && (
+              <p
+                style={{ cursor: "pointer", color: "#2563eb", fontSize: "14px", marginTop: "5px" }}
+                onClick={handleForgotPassword}
+              >
+                Forgot Password?
+              </p>
+            )}
           </div>
 
           {!isLogin && (
@@ -142,6 +167,7 @@ const UserLogin = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
+
               {confirmPassword && (
                 <p className={`password-match-text ${password === confirmPassword ? 'match-success' : 'match-error'}`}>
                   {password === confirmPassword ? 'Passwords match' : 'Passwords do not match'}
@@ -176,3 +202,4 @@ const UserLogin = () => {
 };
 
 export default UserLogin;
+
