@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import "./ResetPassword.css";
 
@@ -7,7 +7,27 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const updatePassword = async () => {
+  useEffect(() => {
+
+    const checkRecoverySession = async () => {
+
+      const { data } = await supabase.auth.getSession();
+
+      if (!data.session) {
+        alert("This reset link is invalid or expired.");
+        window.location.href = "/login/user";
+      }
+
+    };
+
+    checkRecoverySession();
+
+  }, []);
+
+
+  const updatePassword = async (e) => {
+
+    e.preventDefault();
 
     if (password.length < 6) {
       alert("Password must be at least 6 characters.");
@@ -40,31 +60,35 @@ const ResetPassword = () => {
         <p className="reset-subtitle">
           Enter your new password below
         </p>
+        <form onSubmit={updatePassword}>
 
-        <input
-          className="reset-input"
-          type="password"
-          placeholder="New Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            className="reset-input"
+            type="password"
+            placeholder="New Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <input
-          className="reset-input"
-          type="password"
-          placeholder="Confirm Password"
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+          <input
+            className="reset-input"
+            type="password"
+            placeholder="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
 
-        {confirmPassword && (
-          <p className={`password-check ${password === confirmPassword ? "match" : "nomatch"}`}>
-            {password === confirmPassword ? "Passwords match" : "Passwords do not match"}
-          </p>
-        )}
+          {confirmPassword && (
+            <p className={`password-check ${password === confirmPassword ? "match" : "nomatch"}`}>
+              {password === confirmPassword
+                ? "Passwords match"
+                : "Passwords do not match"}
+            </p>
+          )}
 
-        <button className="reset-btn" onClick={updatePassword}>
-          Update Password
-        </button>
+          <button className="reset-btn" type="submit">
+            Update Password
+          </button>
 
+        </form>
       </div>
 
     </div>
