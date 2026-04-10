@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { DialogProvider } from "./components/DialogProvider";
 import Home from "./pages/Home";
 import UserLogin from "./pages/UserLogin";
 import AdminLogin from "./pages/AdminLogin";
@@ -15,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
+    <DialogProvider>
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -75,6 +77,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+    </DialogProvider>
   );
 }
 

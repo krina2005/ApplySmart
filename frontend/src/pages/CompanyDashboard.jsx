@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Footer from '../components/Footer';
+import { useDialog } from '../components/DialogProvider';
 import './CompanyDashboard.css';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
+    const { showAlert, showConfirm } = useDialog();
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [user, setUser] = useState(null);
@@ -80,6 +82,39 @@ const CompanyDashboard = () => {
         navigate('/');
     };
 
+    const handleDeleteJob = async (e, jobId) => {
+        e.stopPropagation(); // prevent opening job modal
+        const confirmed = await showConfirm(
+            'Are you sure you want to delete this job? All applications for this job will also be permanently deleted.',
+            { variant: 'error', title: 'Delete Job', confirmLabel: 'Yes, Delete', cancelLabel: 'Cancel' }
+        );
+        if (!confirmed) return;
+
+        try {
+            // Step 1: Delete all applications linked to this job first (FK constraint)
+            const { error: appsError } = await supabase
+                .from('applications')
+                .delete()
+                .eq('job_id', jobId);
+
+            if (appsError) throw appsError;
+
+            // Step 2: Now safely delete the job
+            const { error: jobError } = await supabase
+                .from('jobs')
+                .delete()
+                .eq('id', jobId)
+                .eq('company_id', user.id); // extra safety: only delete own jobs
+
+            if (jobError) throw jobError;
+
+            // Remove from local state immediately
+            setJobs(prev => prev.filter(j => j.id !== jobId));
+        } catch (error) {
+            await showAlert('Failed to delete job: ' + error.message, { variant: 'error', title: 'Delete Failed' });
+        }
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProfile(prev => ({
@@ -102,10 +137,10 @@ const CompanyDashboard = () => {
 
             if (error) throw error;
 
-            alert('Profile updated successfully!');
+            await showAlert('Profile updated successfully!', { variant: 'success', title: 'Profile Saved' });
             setIsEditing(false);
         } catch (error) {
-            alert('Error updating profile: ' + error.message);
+            await showAlert('Error updating profile: ' + error.message, { variant: 'error', title: 'Save Failed' });
         } finally {
             setLoading(false);
         }
@@ -331,6 +366,20 @@ const CompanyDashboard = () => {
                                 </div>
                                 <div className="job-card-footer">
                                     <span className="job-date">Posted: {new Date(job.created_at).toLocaleDateString()}</span>
+                                    <button
+                                        className="btn-delete-job"
+                                        onClick={(e) => handleDeleteJob(e, job.id)}
+                                        title="Delete job"
+                                        aria-label="Delete job"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                            <path d="M10 11v6" />
+                                            <path d="M14 11v6" />
+                                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         ))}

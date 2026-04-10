@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
+import { useDialog } from "../components/DialogProvider";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [companies, setCompanies] = useState([]);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("pending"); // "pending" | "approved" | "banned"
+  const [activeTab, setActiveTab] = useState("pending");
   const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(null); // id of company being acted on
+  const [actionLoading, setActionLoading] = useState(null);
+  const { showAlert, showConfirm } = useDialog();
 
   // ── FETCH ──────────────────────────────────────────────
   const fetchCompanies = async () => {
@@ -39,7 +41,7 @@ const AdminDashboard = () => {
       .eq("id", id);
 
     if (error) {
-      alert("Error approving company: " + error.message);
+      await showAlert('Error approving company: ' + error.message, { variant: 'error', title: 'Action Failed' });
     } else {
       setCompanies((prev) =>
         prev.map((c) =>
@@ -51,7 +53,8 @@ const AdminDashboard = () => {
   };
 
   const rejectCompany = async (id, name) => {
-    if (!window.confirm(`Reject "${name}"? They will NOT be able to log in.`)) return;
+    const confirmed = await showConfirm(`Reject "${name}"? They will NOT be able to log in.`, { variant: 'error', title: 'Reject Company', confirmLabel: 'Yes, Reject', cancelLabel: 'Cancel' });
+    if (!confirmed) return;
     setActionLoading(id);
     const { error } = await supabase
       .from("company_profiles")
@@ -59,7 +62,7 @@ const AdminDashboard = () => {
       .eq("id", id);
 
     if (error) {
-      alert("Error rejecting company: " + error.message);
+      await showAlert('Error rejecting company: ' + error.message, { variant: 'error', title: 'Action Failed' });
     } else {
       setCompanies((prev) =>
         prev.map((c) =>
@@ -71,12 +74,8 @@ const AdminDashboard = () => {
   };
 
   const removeCompany = async (id, name) => {
-    if (
-      !window.confirm(
-        `Remove "${name}" from the platform?\n\nThey will be banned and cannot log in again.`
-      )
-    )
-      return;
+    const confirmed = await showConfirm(`Remove "${name}" from the platform?\n\nThey will be banned and cannot log in again.`, { variant: 'error', title: 'Ban Company', confirmLabel: 'Yes, Remove', cancelLabel: 'Cancel' });
+    if (!confirmed) return;
 
     setActionLoading(id);
     const { error } = await supabase
@@ -85,7 +84,7 @@ const AdminDashboard = () => {
       .eq("id", id);
 
     if (error) {
-      alert("Error removing company: " + error.message);
+      await showAlert('Error removing company: ' + error.message, { variant: 'error', title: 'Action Failed' });
     } else {
       setCompanies((prev) =>
         prev.map((c) =>
@@ -106,7 +105,7 @@ const AdminDashboard = () => {
       .eq("id", id);
 
     if (error) {
-      alert("Error restoring company: " + error.message);
+      await showAlert('Error restoring company: ' + error.message, { variant: 'error', title: 'Action Failed' });
     } else {
       setCompanies((prev) =>
         prev.map((c) =>

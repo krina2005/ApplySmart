@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Footer from "../components/Footer";
+import { useDialog } from "../components/DialogProvider";
 import "./CompanyDashboard.css";
 
 const CompanyApplications = () => {
     const navigate = useNavigate();
+    const { showAlert, showConfirm } = useDialog();
     const [loading, setLoading] = useState(true);
     const [jobsWithApps, setJobsWithApps] = useState([]);
 
@@ -117,7 +119,7 @@ const CompanyApplications = () => {
 
         } catch (error) {
             console.error("Error updating status:", error);
-            alert("Failed to update status");
+            await showAlert('Failed to update status', { variant: 'error', title: 'Update Failed' });
         }
     };
 
@@ -168,17 +170,19 @@ const CompanyApplications = () => {
                                             <button
                                                 onClick={async () => {
                                                     const pendingApps = job.applications.filter(app => !app.status || app.status === 'Pending');
-                                                    if (confirm(`Analyze and rank ${pendingApps.length} pending resume${pendingApps.length !== 1 ? 's' : ''} for this job?`)) {
+                                                    const confirmed = await showConfirm(`Analyze and rank ${pendingApps.length} pending resume${pendingApps.length !== 1 ? 's' : ''} for this job?`, { variant: 'info', title: 'AI Rank Candidates', confirmLabel: 'Run Ranking', cancelLabel: 'Cancel' });
+                                                    if (confirmed) {
                                                         try {
                                                             const { data: { session } } = await supabase.auth.getSession();
                                                             const token = session?.access_token;
 
                                                             if (!token) {
-                                                                alert("You must be logged in to rank candidates.");
+                                                                await showAlert('You must be logged in to rank candidates.', { variant: 'warning', title: 'Not Logged In' });
                                                                 return;
                                                             }
 
-                                                            const res = await fetch(`http://localhost:8000/rank-job/${job.id}`, {
+                                                            const API_BASE = import.meta.env.VITE_API_URL || "";
+                                                            const res = await fetch(`${API_BASE}/rank-job/${job.id}`, {
                                                                 method: 'POST',
                                                                 headers: {
                                                                     'Authorization': `Bearer ${token}`
@@ -186,14 +190,13 @@ const CompanyApplications = () => {
                                                             });
                                                             const data = await res.json();
                                                             if (data.status === 'success') {
-                                                                alert(`Ranking complete! Processed ${data.ranked_count} application${data.ranked_count !== 1 ? 's' : ''}.`);
-                                                                // Refresh the data to show updated scores
+                                                                await showAlert(`Ranking complete! Processed ${data.ranked_count} application${data.ranked_count !== 1 ? 's' : ''}.`, { variant: 'success', title: 'Ranking Done' });
                                                                 await fetchApplicationsData();
                                                             } else {
-                                                                alert("Error: " + data.message);
+                                                                await showAlert('Error: ' + data.message, { variant: 'error', title: 'Ranking Failed' });
                                                             }
                                                         } catch (err) {
-                                                            alert("Failed to connect to AI engine: " + err.message);
+                                                            await showAlert('Failed to connect to AI engine: ' + err.message, { variant: 'error', title: 'Connection Error' });
                                                         }
                                                     }
                                                 }}

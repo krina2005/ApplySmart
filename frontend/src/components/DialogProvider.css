@@ -1,0 +1,206 @@
+/* ─── Dialog Overlay ─────────────────────────────────────────────────────── */
+.dlg-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 11, 22, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: dlg-fade-in 0.2s ease;
+}
+
+@keyframes dlg-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ─── Dialog Box ─────────────────────────────────────────────────────────── */
+.dlg-box {
+    position: relative;
+    background: linear-gradient(145deg, #0f1c2e, #0a1322);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 20px;
+    padding: 2.2rem 2rem 1.8rem;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+    animation: dlg-slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    text-align: center;
+}
+
+@keyframes dlg-slide-up {
+    from { opacity: 0; transform: translateY(28px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ─── Glow blob behind box ───────────────────────────────────────────────── */
+.dlg-glow {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Variant glow colors */
+.dlg-success .dlg-glow { background: #4cff88; }
+.dlg-error   .dlg-glow { background: #ff6b6b; }
+.dlg-warning .dlg-glow { background: #ffbd2e; }
+.dlg-info    .dlg-glow { background: #4cc3ff; }
+
+/* Variant top accent line */
+.dlg-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+}
+.dlg-success::before { background: linear-gradient(90deg, #4cff88, #00e676); }
+.dlg-error::before   { background: linear-gradient(90deg, #ff6b6b, #ff1744); }
+.dlg-warning::before { background: linear-gradient(90deg, #ffbd2e, #ff9800); }
+.dlg-info::before    { background: linear-gradient(90deg, #4cc3ff, #00b0ff); }
+
+/* ─── Icon ───────────────────────────────────────────────────────────────── */
+.dlg-icon-wrap {
+    position: relative;
+    z-index: 1;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: dlg-icon-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+@keyframes dlg-icon-pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+.dlg-icon-wrap svg {
+    width: 28px;
+    height: 28px;
+}
+
+.dlg-icon-success { background: rgba(76, 255, 136, 0.15); color: #4cff88; border: 1.5px solid rgba(76, 255, 136, 0.35); }
+.dlg-icon-error   { background: rgba(255, 107, 107, 0.15); color: #ff6b6b; border: 1.5px solid rgba(255, 107, 107, 0.35); }
+.dlg-icon-warning { background: rgba(255, 189, 46, 0.15);  color: #ffbd2e; border: 1.5px solid rgba(255, 189, 46, 0.35); }
+.dlg-icon-info    { background: rgba(76, 195, 255, 0.15);  color: #4cc3ff; border: 1.5px solid rgba(76, 195, 255, 0.35); }
+
+/* ─── Content ────────────────────────────────────────────────────────────── */
+.dlg-content {
+    position: relative;
+    z-index: 1;
+}
+
+.dlg-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+}
+
+.dlg-message {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #9ab4ce;
+    line-height: 1.6;
+}
+
+/* ─── Actions ────────────────────────────────────────────────────────────── */
+.dlg-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.dlg-btn {
+    padding: 0.6rem 1.6rem;
+    border-radius: 50px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    letter-spacing: 0.3px;
+    font-family: inherit;
+}
+
+/* Cancel button */
+.dlg-btn-cancel {
+    background: transparent;
+    color: #8fb6d9;
+    border: 1px solid rgba(143, 182, 217, 0.3);
+}
+.dlg-btn-cancel:hover {
+    background: rgba(143, 182, 217, 0.1);
+    color: #ffffff;
+    border-color: rgba(143, 182, 217, 0.5);
+}
+
+/* Confirm — variant colours */
+.dlg-btn-success {
+    background: linear-gradient(135deg, #4cff88, #00e676);
+    color: #022010;
+    box-shadow: 0 4px 15px rgba(76, 255, 136, 0.3);
+}
+.dlg-btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 255, 136, 0.45);
+}
+
+.dlg-btn-error {
+    background: linear-gradient(135deg, #ff6b6b, #ff1744);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.35);
+}
+.dlg-btn-error:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+}
+
+.dlg-btn-warning {
+    background: linear-gradient(135deg, #ffbd2e, #ff9800);
+    color: #1a0e00;
+    box-shadow: 0 4px 15px rgba(255, 189, 46, 0.3);
+}
+.dlg-btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 189, 46, 0.45);
+}
+
+.dlg-btn-info {
+    background: linear-gradient(135deg, #4cc3ff, #00b0ff);
+    color: #001824;
+    box-shadow: 0 4px 15px rgba(76, 195, 255, 0.3);
+}
+.dlg-btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 195, 255, 0.45);
+}
+
+.dlg-btn:active {
+    transform: scale(0.97) !important;
+}

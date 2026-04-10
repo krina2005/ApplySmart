@@ -1,52 +1,120 @@
+# ─────────────────────────────────────────────────────────────────
 # Python
+# ─────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+*.egg-info/
+
+# Virtual environments
 venv/
 env/
 ENV/
-*.egg-info/
-dist/
-build/
+.venv/
 
-# Environment variables
+# Python build artifacts
+build/
+dist/
+
+# ─────────────────────────────────────────────────────────────────
+# Environment variables  (NEVER commit secrets)
+# ─────────────────────────────────────────────────────────────────
 .env
 .env.local
+.env.production
+.env.*.local
 
-# IDE
+# Allow the example/template file to be committed
+!.env.example
+
+# ─────────────────────────────────────────────────────────────────
+# Node / Frontend
+# ─────────────────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+
+# Vite / React build output
+# NOTE: For Hugging Face Docker deployment, frontend/dist is built
+#       INSIDE the Docker image — it does NOT need to be committed.
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# ─────────────────────────────────────────────────────────────────
+# IDE / Editor
+# ─────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
 
+# ─────────────────────────────────────────────────────────────────
+# OS
+# ─────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# ─────────────────────────────────────────────────────────────────
 # Logs
+# ─────────────────────────────────────────────────────────────────
 *.log
+logs/
 debug_*.log
+npm-debug.log*
 
-# Test files
+# ─────────────────────────────────────────────────────────────────
+# Test / temp files
+# ─────────────────────────────────────────────────────────────────
 test_*.py
 *_test.py
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Node modules
-node_modules/
-
-# Build outputs
-frontend/dist/
-frontend/build/
-
-# Temporary files
 *.tmp
 *.temp
+
+# ─────────────────────────────────────────────────────────────────
+# Uploaded / user files (never commit user data)
+# ─────────────────────────────────────────────────────────────────
 *.pdf
 *.docx
+*.doc
+uploads/
 
-# Database
+# ─────────────────────────────────────────────────────────────────
+# Database / local storage
+# ─────────────────────────────────────────────────────────────────
 *.db
 *.sqlite
-__pycache__
+*.sqlite3
+
+# ─────────────────────────────────────────────────────────────────
+# ML model cache  (sentence-transformers downloads to ~/.cache)
+# These are baked into the Docker image — no need to commit
+# ─────────────────────────────────────────────────────────────────
+.cache/
+models/
+*.bin
+*.pt
+*.pth
+*.onnx
+sentence_transformers/
+
+# ─────────────────────────────────────────────────────────────────
+# Hugging Face specific
+# ─────────────────────────────────────────────────────────────────
+# HF writes logs here during space boot
+*.hf_token
+
+# ─────────────────────────────────────────────────────────────────
+# Misc
+# ─────────────────────────────────────────────────────────────────
+*.gz
+*.zip
+*.tar

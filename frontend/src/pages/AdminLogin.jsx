@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginShared.css';
 import { supabase } from '../supabaseClient';
+import { useDialog } from '../components/DialogProvider';
 
 const AdminLogin = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +11,7 @@ const AdminLogin = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { showAlert } = useDialog();
 
   const validateEmail = (email) => {
     // Basic email regex
@@ -28,19 +30,19 @@ const AdminLogin = () => {
 
     // Validation
     if (!validateEmail(email)) {
-      alert("Please enter a valid email address.");
+      await showAlert('Please enter a valid email address.', { variant: 'warning', title: 'Invalid Email' });
       setLoading(false);
       return;
     }
 
     if (!isLogin) {
       if (!validatePassword(password)) {
-        alert("Password must be at least 6 characters long.");
+        await showAlert('Password must be at least 6 characters long.', { variant: 'warning', title: 'Weak Password' });
         setLoading(false);
         return;
       }
       if (password !== confirmPassword) {
-        alert("Passwords do not match.");
+        await showAlert('Passwords do not match.', { variant: 'warning', title: 'Password Mismatch' });
         setLoading(false);
         return;
       }
@@ -60,14 +62,14 @@ const AdminLogin = () => {
         const role = data.user?.user_metadata?.role;
         if (role !== 'admin') {
           await supabase.auth.signOut();
-          alert("Access Denied: You are not authorized as an Admin.");
+          await showAlert('Access Denied: You are not authorized as an Admin.', { variant: 'error', title: 'Access Denied' });
           setLoading(false);
           return;
         }
 
-        alert("Logged in successfully as Admin!");
+        await showAlert('Logged in successfully as Admin!', { variant: 'success', title: 'Welcome, Admin!' });
         console.log("Logged in user:", data.user);
-        window.open('/admin-dashboard', '_blank'); // Open Admin Dashboard in new tab
+        window.open('/admin-dashboard', '_blank');
 
       } else {
         // Sign Up Logic
@@ -83,18 +85,18 @@ const AdminLogin = () => {
 
         if (error) throw error;
         if (!data.session) {
-          alert("Account created! Please verify your email before logging in.");
+          await showAlert('Account created! Please verify your email before logging in.', { variant: 'info', title: 'Verify Email' });
         } else {
-          alert("Account created and logged in!");
-          window.open('/admin-dashboard', '_blank'); // Open Admin Dashboard in new tab if session exists
+          await showAlert('Account created and logged in!', { variant: 'success', title: 'Welcome!' });
+          window.open('/admin-dashboard', '_blank');
         }
         console.log("Signed up user:", data.user);
       }
     } catch (error) {
       if (error.message.includes("User already registered")) {
-        alert("This email is already registered. Please login or use a different email.");
+        await showAlert('This email is already registered. Please login or use a different email.', { variant: 'warning', title: 'Already Registered' });
       } else {
-        alert(error.message);
+        await showAlert(error.message, { variant: 'error', title: 'Error' });
       }
     } finally {
       setLoading(false);

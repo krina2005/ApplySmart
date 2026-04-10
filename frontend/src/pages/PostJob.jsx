@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Footer from "../components/Footer";
-import "./CompanyDashboard.css"; // Reuse styling for now or create new
+import { useDialog } from "../components/DialogProvider";
+import "./CompanyDashboard.css";
 
 const PostJob = () => {
     const navigate = useNavigate();
+    const { showAlert } = useDialog();
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
     const [formData, setFormData] = useState({
@@ -52,11 +54,11 @@ const PostJob = () => {
 
             if (error) throw error;
 
-            alert("Job posted successfully!");
-            navigate("/company-dashboard"); // Redirect to dashboard or stay?
+            await showAlert('Job posted successfully!', { variant: 'success', title: 'Job Posted' });
+            navigate("/company-dashboard");
         } catch (error) {
             console.error("Error posting job:", error);
-            alert("Error posting job: " + error.message);
+            await showAlert('Error posting job: ' + error.message, { variant: 'error', title: 'Post Failed' });
         } finally {
             setLoading(false);
         }

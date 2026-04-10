@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import {FileText,UploadCloud,CheckCircle,Briefcase,Sparkles,} from "lucide-react";
+import { useDialog } from "../components/DialogProvider";
 import "./Upload.css";
 
 const Upload = () => {
@@ -8,10 +9,11 @@ const Upload = () => {
   const [jdText, setJdText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { showAlert } = useDialog();
 
   const handleUpload = async () => {
     if (!file || !jdText) {
-      alert("Please upload resume and paste job description");
+      await showAlert('Please upload a resume and paste a job description.', { variant: 'warning', title: 'Missing Input' });
       return;
     }
 
@@ -23,7 +25,8 @@ const Upload = () => {
     formData.append("role", "Python Backend Developer");
 
     try {
-      const response = await fetch("http://localhost:8000/analyze-resume", {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const response = await fetch(`${API_BASE}/analyze-resume`, {
         method: "POST",
         body: formData,
       });
@@ -31,7 +34,7 @@ const Upload = () => {
       const data = await response.json();
       setResult(data.analysis);
     } catch (error) {
-      alert("Backend connection failed");
+      await showAlert('Backend connection failed. Make sure the AI engine is running.', { variant: 'error', title: 'Connection Failed' });
     } finally {
       setLoading(false);
     }

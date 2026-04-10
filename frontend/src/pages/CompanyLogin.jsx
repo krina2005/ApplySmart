@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginShared.css';
 import { supabase } from '../supabaseClient';
+import { useDialog } from '../components/DialogProvider';
 
 const CompanyLogin = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +11,7 @@ const CompanyLogin = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { showAlert } = useDialog();
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,19 +28,19 @@ const CompanyLogin = () => {
 
         // ── Validation ─────────────────────────────────────
         if (!validateEmail(email)) {
-            alert("Please enter a valid email address.");
+            await showAlert('Please enter a valid email address.', { variant: 'warning', title: 'Invalid Email' });
             setLoading(false);
             return;
         }
 
         if (!isLogin) {
             if (!validatePassword(password)) {
-                alert("Password must be at least 6 characters long.");
+                await showAlert('Password must be at least 6 characters long.', { variant: 'warning', title: 'Weak Password' });
                 setLoading(false);
                 return;
             }
             if (password !== confirmPassword) {
-                alert("Passwords do not match.");
+                await showAlert('Passwords do not match.', { variant: 'warning', title: 'Password Mismatch' });
                 setLoading(false);
                 return;
             }
@@ -58,7 +60,7 @@ const CompanyLogin = () => {
                 const role = data.user?.user_metadata?.role;
                 if (role !== 'company') {
                     await supabase.auth.signOut();
-                    alert("Access Denied: You are not authorized as a Company.");
+                    await showAlert('Access Denied: You are not authorized as a Company.', { variant: 'error', title: 'Access Denied' });
                     setLoading(false);
                     return;
                 }
@@ -76,16 +78,16 @@ const CompanyLogin = () => {
 
                 if (profileData?.is_banned) {
                     await supabase.auth.signOut();
-                    alert(
-                        "⛔ Your company account has been removed by the admin.\n" +
-                        "You can no longer access this platform."
+                    await showAlert(
+                        '⛔ Your company account has been removed by the admin. You can no longer access this platform.',
+                        { variant: 'error', title: 'Account Banned' }
                     );
                     setLoading(false);
                     return;
                 }
 
                 // Pending companies can log in — they'll see a banner on the dashboard
-                alert("✅ Logged in successfully as Company!");
+                await showAlert('Logged in successfully as Company!', { variant: 'success', title: 'Welcome Back!' });
                 window.open('/company-dashboard', '_blank');
 
             } else {
@@ -116,17 +118,16 @@ const CompanyLogin = () => {
                     }
                 }
 
-                alert(
-                    "🎉 Account created!\n\n" +
-                    "Your registration is now pending admin approval.\n" +
-                    "You will be able to log in once an admin approves your account."
+                await showAlert(
+                    '🎉 Account created! Your registration is now pending admin approval. You will be able to log in once an admin approves your account.',
+                    { variant: 'info', title: 'Registration Submitted' }
                 );
             }
         } catch (error) {
             if (error.message.includes("User already registered")) {
-                alert("This email is already registered. Please login or use a different email.");
+                await showAlert('This email is already registered. Please login or use a different email.', { variant: 'warning', title: 'Already Registered' });
             } else {
-                alert(error.message);
+                await showAlert(error.message, { variant: 'error', title: 'Error' });
             }
         } finally {
             setLoading(false);

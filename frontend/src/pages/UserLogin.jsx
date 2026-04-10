@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginShared.css';
 import { supabase } from '../supabaseClient';
+import { useDialog } from '../components/DialogProvider';
 
 const UserLogin = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,6 +12,7 @@ const UserLogin = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { showAlert } = useDialog();
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,19 +28,19 @@ const UserLogin = () => {
     setLoading(true);
 
     if (!validateEmail(email)) {
-      alert("Please enter a valid email address.");
+      await showAlert('Please enter a valid email address.', { variant: 'warning', title: 'Invalid Email' });
       setLoading(false);
       return;
     }
 
     if (!isLogin) {
       if (!validatePassword(password)) {
-        alert("Password must be at least 6 characters long.");
+        await showAlert('Password must be at least 6 characters long.', { variant: 'warning', title: 'Weak Password' });
         setLoading(false);
         return;
       }
       if (password !== confirmPassword) {
-        alert("Passwords do not match.");
+        await showAlert('Passwords do not match.', { variant: 'warning', title: 'Password Mismatch' });
         setLoading(false);
         return;
       }
@@ -56,12 +58,12 @@ const UserLogin = () => {
         const role = data.user?.user_metadata?.role;
         if (role !== 'user') {
           await supabase.auth.signOut();
-          alert("Access Denied: You are not authorized as a User.");
+          await showAlert('Access Denied: You are not authorized as a User.', { variant: 'error', title: 'Access Denied' });
           setLoading(false);
           return;
         }
 
-        alert("Logged in successfully as User!");
+        await showAlert('Logged in successfully as User!', { variant: 'success', title: 'Welcome Back!' });
         console.log("Logged in user:", data.user);
         window.open('/user-dashboard', '_blank');
 
@@ -80,9 +82,9 @@ const UserLogin = () => {
         if (error) throw error;
 
         if (!data.session) {
-          alert("Account created! Please verify your email before logging in.");
+          await showAlert('Account created! Please verify your email before logging in.', { variant: 'info', title: 'Verify Email' });
         } else {
-          alert("Account created and logged in!");
+          await showAlert('Account created and logged in!', { variant: 'success', title: 'Welcome!' });
           window.open('/user-dashboard', '_blank');
         }
 
@@ -91,9 +93,9 @@ const UserLogin = () => {
 
     } catch (error) {
       if (error.message.includes("User already registered")) {
-        alert("This email is already registered. Please login or use a different email.");
+        await showAlert('This email is already registered. Please login or use a different email.', { variant: 'warning', title: 'Already Registered' });
       } else {
-        alert(error.message);
+        await showAlert(error.message, { variant: 'error', title: 'Error' });
       }
     } finally {
       setLoading(false);
@@ -102,7 +104,7 @@ const UserLogin = () => {
 
   const handleForgotPassword = async () => {
     if (!email) {
-      alert("Please enter your email first.");
+      await showAlert('Please enter your email first.', { variant: 'warning', title: 'Email Required' });
       return;
     }
 
@@ -111,9 +113,9 @@ const UserLogin = () => {
     });
 
     if (error) {
-      alert(error.message);
+      await showAlert(error.message, { variant: 'error', title: 'Error' });
     } else {
-      alert("Password reset email sent! Check your inbox.");
+      await showAlert('Password reset email sent! Check your inbox.', { variant: 'success', title: 'Email Sent' });
     }
   };
 

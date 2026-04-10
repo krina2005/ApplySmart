@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
+import { useDialog } from "../components/DialogProvider";
 import "./ResetPassword.css";
 
 const ResetPassword = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { showAlert } = useDialog();
 
   useEffect(() => {
 
@@ -14,7 +16,7 @@ const ResetPassword = () => {
       const { data } = await supabase.auth.getSession();
 
       if (!data.session) {
-        alert("This reset link is invalid or expired.");
+        await showAlert('This reset link is invalid or expired.', { variant: 'error', title: 'Invalid Link' });
         window.location.href = "/login/user";
       }
 
@@ -30,12 +32,12 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (password.length < 6) {
-      alert("Password must be at least 6 characters.");
+      await showAlert('Password must be at least 6 characters.', { variant: 'warning', title: 'Too Short' });
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      await showAlert('Passwords do not match.', { variant: 'warning', title: 'Mismatch' });
       return;
     }
 
@@ -44,9 +46,9 @@ const ResetPassword = () => {
     });
 
     if (error) {
-      alert(error.message);
+      await showAlert(error.message, { variant: 'error', title: 'Update Failed' });
     } else {
-      alert("Password updated successfully!");
+      await showAlert('Password updated successfully!', { variant: 'success', title: 'Password Updated' });
       window.location.href = "/login/user";
     }
   };
