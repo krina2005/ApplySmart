@@ -20,6 +20,9 @@ RUN npm run build
 # ═══════════════════════════════════════════════════════════════════════════════
 FROM python:3.11-slim
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 # System deps for pdfplumber / sentence-transformers
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -34,6 +37,9 @@ WORKDIR /app
 # ── Python dependencies ────────────────────────────────────────────────────────
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# ✅ Install spaCy model (IMPORTANT FIX)
+RUN python -m spacy download en_core_web_sm
 
 # Pre-download the sentence-transformer model so it's baked into the image
 # (avoids a slow first-request download on HF Spaces)

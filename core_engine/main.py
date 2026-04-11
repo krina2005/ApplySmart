@@ -17,14 +17,32 @@ app = FastAPI(title="ApplySmart API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
+        # "http://localhost:5173",
+        # "http://127.0.0.1:5173",
+        "*"
     ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # ── AI Endpoints ───────────────────────────────────────────────────────────────
+
+# Root route
+@app.get("/", include_in_schema=False)
+async def serve_root():
+    index = STATIC_DIR / "index.html"
+    return FileResponse(str(index))
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_react(full_path: str):
+    # Prevent API override
+    if full_path.startswith("analyze") or full_path.startswith("rank"):
+        raise HTTPException(status_code=404)
+
+    index = STATIC_DIR / "index.html"
+    return FileResponse(str(index))
+
 
 from typing import List
 
