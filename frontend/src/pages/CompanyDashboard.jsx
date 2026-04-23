@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Footer from '../components/Footer';
 import { useDialog } from '../components/DialogProvider';
+import { 
+  Building2, 
+  MapPin, 
+  Globe, 
+  Briefcase, 
+  Trash2, 
+  Edit3, 
+  PlusCircle, 
+  Clock, 
+  ChevronRight 
+} from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 import './CompanyDashboard.css';
 
 const CompanyDashboard = () => {
@@ -146,30 +158,20 @@ const CompanyDashboard = () => {
         }
     };
 
-    if (loading) return <div style={{ padding: '2rem', textAlign: 'center', color: '#fff' }}>Loading...</div>;
+    if (loading) return <div className="loading-state">Loading...</div>;
 
     return (
         <div className="company-dashboard-container">
 
             {/* ── Pending Approval Banner ── */}
             {!isApproved && (
-                <div style={{
-                    background: 'linear-gradient(135deg, rgba(255,217,102,0.12), rgba(255,170,0,0.08))',
-                    border: '1px solid rgba(255,217,102,0.4)',
-                    borderRadius: '12px',
-                    padding: '16px 20px',
-                    marginBottom: '24px',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '14px',
-                    color: '#ffd966'
-                }}>
-                    <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>⏳</span>
+                <div className="pending-banner">
+                    <SmartIcon icon={Clock} variant="soft" size={28} color="var(--status-warning-text)" className="pending-icon" />
                     <div>
-                        <div style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '4px' }}>
+                        <div className="pending-title">
                             Account Pending Admin Approval
                         </div>
-                        <div style={{ fontSize: '0.88rem', color: '#c9a940', lineHeight: 1.5 }}>
+                        <div className="pending-description">
                             You can set up your profile and explore, but your job postings will
                             <strong> not be visible to applicants</strong> until an admin approves your account.
                             Please allow some time for review.
@@ -186,6 +188,7 @@ const CompanyDashboard = () => {
                             onClick={() => setIsEditing(true)}
                             className="btn-primary"
                         >
+                            <SmartIcon icon={Edit3} size={16} style={{ marginRight: '0.5rem' }} />
                             Edit Profile
                         </button>
                     )}
@@ -334,8 +337,9 @@ const CompanyDashboard = () => {
                                 <button
                                     onClick={() => setIsEditing(true)}
                                     className="btn-primary"
-                                    style={{ marginTop: '1rem' }}
+                                    style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                                 >
+                                    <PlusCircle size={20} />
                                     Create Profile
                                 </button>
                             </div>
@@ -359,7 +363,10 @@ const CompanyDashboard = () => {
                                     <span className="job-type-badge">{job.type}</span>
                                 </div>
                                 <div className="job-card-body">
-                                    <p className="job-location">📍 {job.location}</p>
+                                    <p className="job-location">
+                                        <SmartIcon icon={MapPin} size={14} style={{ marginRight: '0.3rem' }} />
+                                        {job.location}
+                                    </p>
                                     <p className="job-description-preview">
                                         {job.description?.substring(0, 100)}...
                                     </p>
@@ -372,13 +379,7 @@ const CompanyDashboard = () => {
                                         title="Delete job"
                                         aria-label="Delete job"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="3 6 5 6 21 6" />
-                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                                        </svg>
+                                        <SmartIcon icon={Trash2} size={16} />
                                     </button>
                                 </div>
                             </div>
@@ -390,7 +391,9 @@ const CompanyDashboard = () => {
                         <button
                             onClick={() => navigate('/post-job')}
                             className="btn-secondary"
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                         >
+                            <SmartIcon icon={PlusCircle} size={18} />
                             Post a Job
                         </button>
                     </div>
@@ -408,7 +411,10 @@ const CompanyDashboard = () => {
                         </div>
 
                         <div className="modal-meta">
-                            <p className="modal-location">📍 {selectedJob.location}</p>
+                            <p className="modal-location">
+                                <SmartIcon icon={MapPin} size={14} style={{ marginRight: '0.3rem' }} />
+                                {selectedJob.location}
+                            </p>
                             <p className="modal-date">Posted on {new Date(selectedJob.created_at).toLocaleDateString()}</p>
                         </div>
 

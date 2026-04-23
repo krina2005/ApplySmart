@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import {FileText,UploadCloud,CheckCircle,Briefcase,Sparkles,} from "lucide-react";
+import { FileText, UploadCloud, CheckCircle, Briefcase, Sparkles } from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 import { useDialog } from "../components/DialogProvider";
 import "./Upload.css";
 
@@ -57,8 +58,8 @@ const Upload = () => {
 
           {/* Resume Upload */}
           <div className="glass-card">
-            <h3 className="card-title">
-              <FileText size={20} /> Upload Resume
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <SmartIcon icon={FileText} size={20} /> Upload Resume
             </h3>
 
             <input
@@ -74,7 +75,7 @@ const Upload = () => {
               className={`drop-zone ${file ? "active" : ""}`}
             >
               <div className="upload-icon-large">
-                {file ? <CheckCircle /> : <UploadCloud />}
+                <SmartIcon icon={file ? CheckCircle : UploadCloud} variant="soft" size={48} />
               </div>
 
               <div className="file-info">
@@ -106,8 +107,8 @@ const Upload = () => {
 
           {/* Job Description */}
           <div className="glass-card">
-            <h3 className="card-title">
-              <Briefcase size={20} /> Job Description
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <SmartIcon icon={Briefcase} size={20} /> Job Description
             </h3>
 
             <textarea
@@ -128,7 +129,7 @@ const Upload = () => {
           >
             {loading ? <div className="spinner"></div> : (
               <>
-                <Sparkles size={18} /> Analyze Match
+                <SmartIcon icon={Sparkles} size={18} style={{ marginRight: '0.5rem' }} /> Analyze Match
               </>
             )}
           </button>
@@ -145,7 +146,7 @@ const Upload = () => {
 
             <div className="analysis-grid">
               <div>
-                <h4 style={{ marginBottom: "15px", color: "#4ade80" }}>
+                <h4 style={{ marginBottom: "15px", color: "var(--status-success-text)" }}>
                   Matched Skills
                 </h4>
                 {result.matched_skills.map((s, i) => (
@@ -156,7 +157,7 @@ const Upload = () => {
               </div>
 
               <div>
-                <h4 style={{ marginBottom: "15px", color: "#f87171" }}>
+                <h4 style={{ marginBottom: "15px", color: "var(--status-error-text)" }}>
                   Missing Skills
                 </h4>
                 {result.missing_skills.map((s, i) => (

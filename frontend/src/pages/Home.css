@@ -4,7 +4,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(circle at top, #0f1c2e, #050b16);
+  background: var(--bg-gradient-home);
 }
 
 /* --- Cursor reactive background effect: start --- */
@@ -19,57 +19,57 @@
   background-image:
     radial-gradient(
       560px circle at var(--bg-cursor-x) var(--bg-cursor-y),
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0) 65%
+      var(--bg-cursor-glow),
+      transparent 65%
     ),
-    radial-gradient(circle at top center, #1e293b 0%, #020617 70%) !important;
+    var(--bg-gradient-hero) !important;
 }
 
 .features {
   background-image:
     radial-gradient(
       520px circle at var(--bg-cursor-x) var(--bg-cursor-y),
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0) 68%
+      var(--bg-cursor-glow),
+      transparent 68%
     ),
-    linear-gradient(#0a1423, #0a1423) !important;
+    var(--bg-gradient-features) !important;
 }
 
 .how-it-works {
   background-image:
     radial-gradient(
       520px circle at var(--bg-cursor-x) var(--bg-cursor-y),
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0) 68%
+      var(--bg-cursor-glow),
+      transparent 68%
     ),
-    linear-gradient(#050b16, #050b16) !important;
+    var(--bg-gradient-how) !important;
 }
 
 .cta-section {
   background-image:
     radial-gradient(
       560px circle at var(--bg-cursor-x) var(--bg-cursor-y),
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0) 65%
+      var(--bg-cursor-glow),
+      transparent 65%
     ),
-    linear-gradient(135deg, #0e1b2f, #050b16) !important;
+    var(--bg-gradient-cta) !important;
 }
 
 @media (hover: none), (pointer: coarse) {
   .hero {
-    background-image: radial-gradient(circle at top center, #1e293b 0%, #020617 70%) !important;
+    background-image: var(--bg-gradient-hero) !important;
   }
 
   .features {
-    background-image: linear-gradient(#0a1423, #0a1423) !important;
+    background-image: var(--bg-gradient-features) !important;
   }
 
   .how-it-works {
-    background-image: linear-gradient(#050b16, #050b16) !important;
+    background-image: var(--bg-gradient-how) !important;
   }
 
   .cta-section {
-    background-image: linear-gradient(135deg, #0e1b2f, #050b16) !important;
+    background-image: var(--bg-gradient-cta) !important;
   }
 }
 /* --- Cursor reactive background effect: end --- */
@@ -78,7 +78,7 @@
 .hero {
   padding: 100px 20px 80px;
   text-align: center;
-  background: radial-gradient(circle at top center, #1e293b 0%, #020617 70%);
+  background: var(--bg-gradient-hero);
 }
 
 .hero-title {
@@ -86,7 +86,7 @@
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #4cc3ff 0%, #ffffff 50%, #4cc3ff 100%);
+  background: var(--bg-gradient-text);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -97,7 +97,7 @@
 
 .hero-subtitle {
   font-size: 1.2rem;
-  color: #b0c4de;
+  color: var(--text-secondary);
   max-width: 700px;
   margin: 0 auto 40px;
   line-height: 1.7;
@@ -121,7 +121,7 @@
 }
 
 .cta-button.primary {
-  background: linear-gradient(135deg, #4cc3ff, #00eeff);
+  background: var(--bg-gradient-button);
   color: #0f172a;
   box-shadow: 0 4px 20px rgba(76, 195, 255, 0.4);
 }
@@ -133,13 +133,13 @@
 
 .cta-button.secondary {
   background: transparent;
-  color: #4cc3ff;
-  border: 2px solid #4cc3ff;
-  box-shadow: 0 4px 20px rgba(76, 195, 255, 0.2);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow-accent);
 }
 
 .cta-button.secondary:hover {
-  background: rgba(76, 195, 255, 0.1);
+  background: var(--accent-soft);
   transform: translateY(-3px);
   box-shadow: 0 6px 30px rgba(76, 195, 255, 0.3);
 }
@@ -147,7 +147,7 @@
 /* --- Features Section --- */
 .features {
   padding: 80px 32px;
-  background: #0a1423;
+  background: var(--bg-gradient-features);
 }
 
 
@@ -156,7 +156,7 @@
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 60px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 700;
 }
 
@@ -169,24 +169,25 @@
 }
 
 .feature-card {
-  background: linear-gradient(145deg, #0e1b2f, #0a1423);
-  border: 1px solid #1e2a40;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   padding: 2rem;
   border-radius: 16px;
   transition: all 0.3s ease;
   text-align: center;
+  box-shadow: var(--shadow-md);
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  border-color: #4cc3ff;
-  box-shadow: 0 10px 30px rgba(76, 195, 255, 0.2);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-accent);
 }
 
 .feature-icon {
   width: 48px;
   height: 48px;
-  color: #4cc3ff;
+  color: var(--accent);
   margin-bottom: 1rem;
 }
 
@@ -197,12 +198,12 @@
 .feature-card h3 {
   font-size: 1.4rem;
   margin-bottom: 1rem;
-  color: #4cc3ff;
+  color: var(--accent);
   font-weight: 600;
 }
 
 .feature-card p {
-  color: #8fb6d9;
+  color: var(--text-secondary);
   line-height: 1.7;
   font-size: 0.95rem;
 }
@@ -210,7 +211,7 @@
 /* --- How It Works Section --- */
 .how-it-works {
   padding: 80px 32px;
-  background: #050b16;
+  background: var(--bg-gradient-how);
 }
 
 .workflow-section {
@@ -225,7 +226,7 @@
 .workflow-title {
   text-align: center;
   font-size: 1.8rem;
-  color: #4cc3ff;
+  color: var(--accent);
   margin-bottom: 3rem;
   font-weight: 600;
 }
@@ -242,23 +243,23 @@
   align-items: center;
   text-align: center;
   padding: 1.5rem;
-  background: rgba(14, 27, 47, 0.3);
+  background: var(--accent-soft);
   border-radius: 12px;
-  border: 1px solid #1e2a40;
+  border: 1px solid var(--border);
   transition: all 0.3s ease;
 }
 
 .step:hover {
-  border-color: #4cc3ff;
-  background: rgba(14, 27, 47, 0.5);
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
   transform: translateY(-5px);
 }
 
 .step-number {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, rgba(76, 195, 255, 0.2), rgba(76, 195, 255, 0.1));
-  color: #4cc3ff;
+  background: var(--bg-gradient-step);
+  color: var(--accent);
   font-size: 1.8rem;
   font-weight: 800;
   display: flex;
@@ -266,18 +267,18 @@
   align-items: center;
   border-radius: 50%;
   margin-bottom: 1.5rem;
-  border: 2px solid #4cc3ff;
+  border: 2px solid var(--accent);
 }
 
 .step h4 {
   font-size: 1.2rem;
   margin-bottom: 0.8rem;
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .step p {
-  color: #8fb6d9;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -285,22 +286,22 @@
 /* --- CTA Section --- */
 .cta-section {
   padding: 80px 32px;
-  background: linear-gradient(135deg, #0e1b2f, #050b16);
+  background: var(--bg-gradient-cta);
   text-align: center;
-  border-top: 1px solid #1e2a40;
-  border-bottom: 1px solid #1e2a40;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .cta-section h2 {
   font-size: 2.5rem;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
 .cta-section p {
   font-size: 1.1rem;
-  color: #b0c4de;
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
   max-width: 600px;
   margin-left: auto;
@@ -317,8 +318,8 @@
 /* --- Footer --- */
 .footer {
   padding: 2.5rem 2rem;
-  background: #050b16;
-  border-top: 1px solid rgba(76, 195, 255, 0.2);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--accent-soft);
   margin-top: auto;
 }
 
@@ -377,5 +378,41 @@
   .cta-button {
     width: 100%;
     max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 60px 16px 40px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+    margin-bottom: 40px;
+  }
+
+  .features,
+  .how-it-works,
+  .cta-section {
+    padding: 60px 16px;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .step-number {
+    width: 48px;
+    height: 48px;
+    font-size: 1.4rem;
   }
 }

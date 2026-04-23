@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Footer from "../components/Footer";
 import { useDialog } from "../components/DialogProvider";
+import { Briefcase, Send } from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 import "./CompanyDashboard.css";
 
 const PostJob = () => {
@@ -67,9 +69,9 @@ const PostJob = () => {
     return (
         <div className="company-dashboard-container">
             <div className="dashboard-card">
-                <div className="card-header">
-                    <h2 className="card-title">Post a New Job</h2>
-                </div>
+                    <h2 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <SmartIcon icon={Briefcase} variant="soft" size={24} /> Post a New Job
+                    </h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -143,7 +145,9 @@ const PostJob = () => {
                             type="submit"
                             className="btn-primary btn-save"
                             disabled={loading}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                         >
+                            <SmartIcon icon={Send} size={18} />
                             {loading ? "Posting..." : "Post Job"}
                         </button>
                     </div>

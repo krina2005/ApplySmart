@@ -1,6 +1,6 @@
 .app-footer {
-    background: linear-gradient(180deg, #0a1423, #050b16);
-    border-top: 1px solid rgba(76, 195, 255, 0.2);
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
     padding: 2rem 1.5rem;
     margin-top: 4rem;
     width: 100%;
@@ -13,13 +13,13 @@
 }
 
 .footer-content p {
-    color: #8fb6d9;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin: 0.3rem 0;
 }
 
 .footer-tagline {
-    color: #6c8a99;
+    color: var(--text-muted);
     font-size: 0.85rem;
     font-style: italic;
 }

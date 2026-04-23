@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
+import { LogOut, UserCircle, Menu, X, Home, Sparkles, LayoutDashboard, PlusCircle, ClipboardList, LogIn } from "lucide-react";
+import SmartIcon from "./SmartIcon";
 import { supabase } from "../supabaseClient";
 import "./Navbar.css";
+
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);          // login dropdown
@@ -72,7 +75,7 @@ const Navbar = () => {
       <div className="logo-container">
         {/* Hamburger (mobile only) */}
         <div className="hamburger left" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <FaTimes /> : <FaBars />}
+          <SmartIcon icon={menuOpen ? X : Menu} variant="ghost" />
         </div>
 
         <img src="/logo.png" alt="Apply Smart" className="logo-img" />
@@ -105,14 +108,15 @@ const Navbar = () => {
 
       {/* RIGHT */}
       <div className="login-box">
+        <ThemeToggle />
 
         {/* Desktop login */}
         {!menuOpen && (
           displayRole ? (
-            <FaSignOutAlt className="login-icon" onClick={handleLogout} />
+            <SmartIcon icon={LogOut} variant="ghost" className="login-icon" onClick={handleLogout} />
           ) : (
             <>
-              <FaUserCircle className="login-icon" onClick={() => setOpen(!open)} />
+              <SmartIcon icon={UserCircle} variant="ghost" className="login-icon" onClick={() => setOpen(!open)} />
               {open && (
                 <div className="dropdown">
                   <Link to="/login/user" onClick={() => setOpen(false)}>User Login</Link>
@@ -154,8 +158,9 @@ const Navbar = () => {
                     to="/user-dashboard"
                     className={location.pathname.startsWith("/user-dashboard") ? "active" : ""}
                     onClick={closeMobileMenu}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                   >
-                    Dashboard
+                    <SmartIcon icon={LayoutDashboard} size={18} /> Dashboard
                   </Link>
                 </li>
               </>
@@ -177,8 +182,9 @@ const Navbar = () => {
                     to="/company-dashboard"
                     className={location.pathname.startsWith("/company-dashboard") ? "active" : ""}
                     onClick={closeMobileMenu}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                   >
-                    Company Dashboard
+                    <SmartIcon icon={LayoutDashboard} size={18} /> Company Dashboard
                   </Link>
                 </li>
                 <li>
@@ -186,8 +192,9 @@ const Navbar = () => {
                     to="/post-job"
                     className={location.pathname.startsWith("/post-job") ? "active" : ""}
                     onClick={closeMobileMenu}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                   >
-                    Post Job
+                    <SmartIcon icon={PlusCircle} size={18} /> Post Job
                   </Link>
                 </li>
                 <li>
@@ -195,8 +202,9 @@ const Navbar = () => {
                     to="/applications"
                     className={location.pathname.startsWith("/applications") ? "active" : ""}
                     onClick={closeMobileMenu}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                   >
-                    Applications
+                    <SmartIcon icon={ClipboardList} size={18} /> Applications
                   </Link>
                 </li>
               </>
@@ -236,8 +244,8 @@ const Navbar = () => {
             )}
 
             {displayRole && (
-              <li className="logout" onClick={handleLogout}>
-                Logout
+              <li className="logout" onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <SmartIcon icon={LogOut} size={18} /> Logout
               </li>
             )}
           </ul>

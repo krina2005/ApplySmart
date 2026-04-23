@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Footer from "../components/Footer";
 import { useDialog } from "../components/DialogProvider";
+import { 
+  ClipboardList, 
+  CheckCircle2, 
+  Slash, 
+  Trash2, 
+  Sparkles, 
+  Check, 
+  X, 
+  FileText 
+} from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 import "./CompanyDashboard.css";
 
 const CompanyApplications = () => {
@@ -137,28 +148,28 @@ const CompanyApplications = () => {
                 ) : (
                     <div className="job-applications-list">
                         {jobsWithApps.map(job => (
-                            <div key={job.id} className="dashboard-card application-group-card" style={{ marginBottom: '2rem' }}>
-                                <div className="card-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-                                    <div>
-                                        <h3 className="card-title" style={{ fontSize: '1.4rem' }}>{job.title}</h3>
-                                        <span style={{ color: '#8fb6d9', fontSize: '0.9rem' }}>
+                            <div key={job.id} className="application-group-card">
+                                <div className="job-group-header">
+                                    <div className="job-group-title">
+                                        <h2>{job.title}</h2>
+                                        <span className="job-group-date">
                                             Posted: {new Date(job.created_at).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                                        <div style={{ display: 'flex', gap: '0.6rem' }}>
                                             {(() => {
                                                 const pendingCount = job.applications.filter(app => !app.status || app.status === 'Pending').length;
                                                 const approvedCount = job.applications.filter(app => app.status === 'Approved').length;
                                                 return (
                                                     <>
                                                         {pendingCount > 0 && (
-                                                            <span className="app-count-badge" style={{ backgroundColor: 'rgba(255, 152, 0, 0.2)', color: '#ff9800' }}>
+                                                            <span className="app-count-badge" style={{ borderColor: '#ff9800', color: '#ff9800', background: 'rgba(255, 152, 0, 0.05)' }}>
                                                                 {pendingCount} Pending
                                                             </span>
                                                         )}
                                                         {approvedCount > 0 && (
-                                                            <span className="app-count-badge" style={{ backgroundColor: 'rgba(76, 175, 80, 0.2)', color: '#4caf50' }}>
+                                                            <span className="app-count-badge" style={{ borderColor: '#4caf50', color: '#4caf50', background: 'rgba(76, 175, 80, 0.05)' }}>
                                                                 {approvedCount} Approved
                                                             </span>
                                                         )}
@@ -201,9 +212,9 @@ const CompanyApplications = () => {
                                                     }
                                                 }}
                                                 className="btn-secondary"
-                                                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+                                                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                                             >
-                                                ✨ AI Rank Pending Candidates
+                                                <SmartIcon icon={Sparkles} size={16} /> AI Rank Candidates
                                             </button>
                                         )}
                                     </div>
@@ -219,7 +230,7 @@ const CompanyApplications = () => {
                                             return pendingApps.length > 0 && (
                                                 <div className="application-section-wrapper">
                                                     <h4 className="application-section-header pending-section-header">
-                                                        📋 Pending Applications ({pendingApps.length})
+                                                        <SmartIcon icon={ClipboardList} variant="soft" size={20} /> Pending Applications ({pendingApps.length})
                                                     </h4>
                                                     <div className="table-responsive">
                                                         <table className="applications-table">
@@ -250,7 +261,7 @@ const CompanyApplications = () => {
                                                                                 rel="noopener noreferrer"
                                                                                 className="view-resume-link"
                                                                             >
-                                                                                View PDF
+                                                                                View PDF <SmartIcon icon={FileText} size={14} style={{ marginLeft: '0.4rem' }} />
                                                                             </a>
                                                                         </td>
                                                                         {/* <td>
@@ -291,14 +302,14 @@ const CompanyApplications = () => {
                                                                                     className="btn-icon btn-approve"
                                                                                     title="Approve"
                                                                                 >
-                                                                                    ✓
+                                                                                    <SmartIcon icon={Check} size={16} />
                                                                                 </button>
                                                                                 <button
                                                                                     onClick={() => handleStatusUpdate(app.id, 'Rejected')}
                                                                                     className="btn-icon btn-reject"
                                                                                     title="Reject"
                                                                                 >
-                                                                                    ✕
+                                                                                    <SmartIcon icon={X} size={16} />
                                                                                 </button>
                                                                             </div>
                                                                         </td>
@@ -317,7 +328,7 @@ const CompanyApplications = () => {
                                             return approvedApps.length > 0 && (
                                                 <div className="application-section-wrapper">
                                                     <h4 className="application-section-header approved-section-header">
-                                                        ✅ Approved Applications ({approvedApps.length})
+                                                        <SmartIcon icon={CheckCircle2} variant="soft" size={20} /> Approved Applications ({approvedApps.length})
                                                     </h4>
                                                     <div className="table-responsive">
                                                         <table className="applications-table">
@@ -347,7 +358,7 @@ const CompanyApplications = () => {
                                                                                 rel="noopener noreferrer"
                                                                                 className="view-resume-link"
                                                                             >
-                                                                                View PDF
+                                                                                View PDF <SmartIcon icon={FileText} size={14} style={{ marginLeft: '0.4rem' }} />
                                                                             </a>
                                                                         </td>
                                                                         <td>

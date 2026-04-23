@@ -26,6 +26,7 @@ import {
   Sparkles,
   AlertCircle
 } from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 
 const UserDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -254,40 +255,44 @@ const UserDashboard = () => {
       {toast.show && (
         <div className={`toast toast-${toast.type}`}>
           {toast.type === "success" ? (
-            <CheckCircle size={18} style={{ marginRight: '0.5rem' }} />
+            <SmartIcon icon={CheckCircle} size={18} className="toast-icon" />
           ) : (
-            <AlertCircle size={18} style={{ marginRight: '0.5rem' }} />
+            <SmartIcon icon={AlertCircle} size={18} className="toast-icon" />
           )}
           {toast.message}
         </div>
       )}
 
-      <p className="dashboard-subtitle">
-        Find your dream job and track your applications
-      </p>
+      <header style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <SmartIcon icon={Award} variant="soft" size={32} color="var(--accent)" style={{ marginBottom: '1rem' }} />
+        <h1 className="dashboard-title" style={{ marginTop: '0.5rem' }}>User Dashboard</h1>
+        <p className="dashboard-subtitle">
+          Find your dream job and track your applications
+        </p>
+      </header>
 
       {/* Application Stats Cards */}
       {applications.length > 0 && (
         <div className="stats-grid">
           <div className="stat-card">
-            <Briefcase size={24} style={{ color: '#4cc3ff', marginBottom: '0.5rem' }} />
+            <SmartIcon icon={Briefcase} variant="soft" size={28} color="var(--accent)" style={{ marginBottom: '0.5rem' }} />
             <div className="stat-value">{appStats.total}</div>
             <div className="stat-label">Total Applied</div>
           </div>
           <div className="stat-card">
-            <Clock size={24} style={{ color: '#ffd966', marginBottom: '0.5rem' }} />
-            <div className="stat-value" style={{ color: '#ffd966' }}>{appStats.pending}</div>
+            <SmartIcon icon={Clock} variant="soft" size={28} color="var(--status-warning-text)" style={{ marginBottom: '0.5rem' }} />
+            <div className="stat-value" style={{ color: 'var(--status-warning-text)' }}>{appStats.pending}</div>
             <div className="stat-label">Pending</div>
           </div>
           <div className="stat-card">
-            <CheckCircle size={24} style={{ color: '#4cff88', marginBottom: '0.5rem' }} />
-            <div className="stat-value" style={{ color: '#4cff88' }}>{appStats.accepted}</div>
+            <SmartIcon icon={CheckCircle} variant="soft" size={28} color="var(--status-success-text)" style={{ marginBottom: '0.5rem' }} />
+            <div className="stat-value" style={{ color: 'var(--status-success-text)' }}>{appStats.accepted}</div>
             {/* CHANGED: Label still says "Accepted" for user-friendly display */}
             <div className="stat-label">Accepted</div>
           </div>
           <div className="stat-card">
-            <XCircle size={24} style={{ color: '#ff6b6b', marginBottom: '0.5rem' }} />
-            <div className="stat-value" style={{ color: '#ff6b6b' }}>{appStats.rejected}</div>
+            <SmartIcon icon={XCircle} variant="soft" size={28} color="var(--status-error-text)" style={{ marginBottom: '0.5rem' }} />
+            <div className="stat-value" style={{ color: 'var(--status-error-text)' }}>{appStats.rejected}</div>
             <div className="stat-label">Rejected</div>
           </div>
         </div>
@@ -295,23 +300,15 @@ const UserDashboard = () => {
 
       {/* Filter Section */}
       <div className="filter-box">
-        <div style={{ position: 'relative', width: '100%', maxWidth: '500px' }}>
-          <Search 
-            size={18} 
-            style={{ 
-              position: 'absolute', 
-              left: '12px', 
-              top: '50%', 
-              transform: 'translateY(-50%)',
-              color: '#6f86a3'
-            }} 
-          />
+        <div style={{ position: 'relative', width: '100%', maxWidth: '600px' }}>
+          <SmartIcon icon={Search} size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }} />
           <input
             type="text"
+            className="filter-input"
             placeholder="Search Job Title, Company, Industry, or Location..."
             value={domainFilter}
             onChange={(e) => setDomainFilter(e.target.value)}
-            style={{ width: '100%', paddingLeft: '40px' }}
+            style={{ paddingLeft: '45px' }}
           />
         </div>
       </div>
@@ -324,7 +321,7 @@ const UserDashboard = () => {
             className={`job-type-tab ${jobTypeFilter === type ? "active" : ""}`}
             onClick={() => setJobTypeFilter(type)}
           >
-            <Filter size={14} style={{ marginRight: '0.3rem' }} />
+            <SmartIcon icon={Filter} size={14} style={{ marginRight: '0.3rem' }} />
             {type}
           </button>
         ))}
@@ -334,7 +331,7 @@ const UserDashboard = () => {
       <div className="section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2>
-            <Briefcase size={24} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+            <SmartIcon icon={Briefcase} variant="soft" size={24} style={{ marginRight: '0.5rem', display: 'inline-flex' }} />
             Open Positions ({filteredJobs.length})
           </h2>
         </div>
@@ -347,7 +344,7 @@ const UserDashboard = () => {
           </div>
         ) : error ? (
           <div style={{ textAlign: 'center', color: '#ff6b6b', padding: '2rem' }}>
-            <AlertCircle size={48} style={{ marginBottom: '1rem' }} />
+            <SmartIcon icon={AlertCircle} size={48} variant="soft" style={{ marginBottom: '1rem' }} />
             <p>Error loading jobs: {error.message}</p>
             <button 
               onClick={() => window.location.reload()} 
@@ -363,13 +360,13 @@ const UserDashboard = () => {
                 gap: '0.5rem'
               }}
             >
-              <RefreshCw size={16} />
+              <SmartIcon icon={RefreshCw} size={16} />
               Retry
             </button>
           </div>
         ) : filteredJobs.length === 0 ? (
           <div className="empty-state-card" style={{ padding: '3rem', textAlign: 'center' }}>
-            <Search size={64} style={{ color: '#4cc3ff', marginBottom: '1rem' }} />
+            <SmartIcon icon={Search} size={64} variant="soft" style={{ marginBottom: '1rem' }} />
             <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No jobs found</p>
             <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
               Try adjusting your filters or search terms
@@ -389,7 +386,7 @@ const UserDashboard = () => {
                 gap: '0.5rem'
               }}
             >
-              <X size={16} />
+              <SmartIcon icon={X} size={16} />
               Clear Filters
             </button>
           </div>
@@ -403,27 +400,27 @@ const UserDashboard = () => {
                   {/* Job type badge */}
                   {job.type && (
                     <div className="job-type-badge">
-                      <Target size={12} style={{ marginRight: '0.3rem' }} />
+                      <SmartIcon icon={Target} size={12} style={{ marginRight: '0.3rem' }} />
                       {job.type}
                     </div>
                   )}
                   
                   <h3>{job.title}</h3>
                   <p style={{ color: '#aaa', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Building2 size={16} />
+                    <SmartIcon icon={Building2} size={16} />
                     <strong>{job.company_profiles?.company_name}</strong>
                   </p>
 
                   {job.location && (
                     <p style={{ color: '#8fb6d9', fontSize: '0.9rem', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <MapPin size={14} />
+                      <SmartIcon icon={MapPin} size={14} />
                       {job.location}
                     </p>
                   )}
                   
                   {job.company_profiles?.industry && (
                     <p style={{ color: '#8fb6d9', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Factory size={14} />
+                      <SmartIcon icon={Factory} size={14} />
                       {job.company_profiles.industry}
                     </p>
                   )}
@@ -442,7 +439,7 @@ const UserDashboard = () => {
                       justifyContent: 'center',
                       gap: '0.5rem'
                     }}>
-                      <CheckCircle size={14} />
+                      <SmartIcon icon={CheckCircle} size={14} />
                       Already Applied
                     </div>
                   )}
@@ -454,7 +451,7 @@ const UserDashboard = () => {
                       setShowModal(true);
                     }}
                   >
-                    <FileText size={16} style={{ marginRight: '0.5rem' }} />
+                    <SmartIcon icon={FileText} size={16} style={{ marginRight: '0.5rem' }} />
                     {hasApplied ? "View Details" : "View & Apply"}
                   </button>
                 </div>
@@ -468,7 +465,7 @@ const UserDashboard = () => {
       <div className="section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
           <h2>
-            <BarChart3 size={24} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+            <SmartIcon icon={BarChart3} variant="soft" size={24} style={{ marginRight: '0.5rem', display: 'inline-flex' }} />
             Application Status ({applications.length})
           </h2>
           
@@ -477,14 +474,7 @@ const UserDashboard = () => {
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                background: '#0c1626',
-                border: '1px solid #1e2a40',
-                color: '#fff',
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}
+              className="sort-select"
             >
               <option value="recent">Most Recent</option>
               <option value="score">Highest Score</option>
@@ -501,7 +491,7 @@ const UserDashboard = () => {
               left: '12px', 
               top: '50%', 
               transform: 'translateY(-50%)',
-              color: '#6f86a3'
+              color: 'var(--text-muted)'
             }} 
           />
           <input
@@ -517,7 +507,7 @@ const UserDashboard = () => {
         <div className="status-list">
           {filteredApplications.length === 0 && applications.length === 0 && (
             <div className="empty-state-card" style={{ padding: '3rem', textAlign: 'center', backgroundColor: '#1e293b', borderRadius: '8px' }}>
-              <FileText size={64} style={{ color: '#4cc3ff', marginBottom: '1rem' }} />
+              <SmartIcon icon={FileText} size={64} variant="soft" style={{ marginBottom: '1rem' }} />
               <p style={{ color: '#94a3b8', marginBottom: '0.5rem', fontSize: '1.1rem' }}>No applications yet</p>
               <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                 Start applying to jobs above to track your applications here
@@ -536,7 +526,7 @@ const UserDashboard = () => {
                   gap: '0.5rem'
                 }}
               >
-                <TrendingUp size={16} />
+                <SmartIcon icon={TrendingUp} size={16} />
                 Browse Jobs
               </button>
             </div>
@@ -544,7 +534,7 @@ const UserDashboard = () => {
 
           {filteredApplications.length === 0 && applications.length > 0 && (
             <div className="empty-state-card" style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#1e293b', borderRadius: '8px' }}>
-              <Search size={48} style={{ color: '#94a3b8', marginBottom: '1rem' }} />
+              <SmartIcon icon={Search} size={48} variant="soft" style={{ marginBottom: '1rem' }} />
               <p style={{ color: '#94a3b8' }}>No applications match your search</p>
               <button 
                 onClick={() => setSearchStatus("")}
@@ -560,7 +550,7 @@ const UserDashboard = () => {
                   gap: '0.5rem'
                 }}
               >
-                <X size={16} />
+                <SmartIcon icon={X} size={16} />
                 Clear Search
               </button>
             </div>
@@ -607,11 +597,11 @@ const UserDashboard = () => {
                     <div style={{ flex: 1 }}>
                       <strong style={{ fontSize: '1.1em' }}>{app.jobs?.title}</strong>
                       <div style={{ fontSize: '0.85em', color: '#94a3b8', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <Building2 size={12} />
+                        <SmartIcon icon={Building2} size={12} />
                         {app.jobs?.company_profiles?.company_name}
                       </div>
                       <div style={{ fontSize: '0.75em', color: '#64748b', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <Calendar size={12} />
+                        <SmartIcon icon={Calendar} size={12} />
                         Applied on {appliedDate}
                       </div>
                       {hasAIRanking && (
@@ -624,7 +614,7 @@ const UserDashboard = () => {
                           alignItems: 'center',
                           gap: '0.3rem'
                         }}>
-                          <Award size={14} />
+                          <SmartIcon icon={Award} size={14} />
                           Match: {app.score}%
                         </div>
                       )}
@@ -636,7 +626,8 @@ const UserDashboard = () => {
                       >
                         {app.status}
                       </span>
-                      <ChevronDown 
+                      <SmartIcon 
+                        icon={ChevronDown}
                         size={20}
                         style={{
                           color: '#64748b',
@@ -664,14 +655,14 @@ const UserDashboard = () => {
                         alignItems: 'center',
                         gap: '0.5rem'
                       }}>
-                        <Sparkles size={16} />
+                        <SmartIcon icon={Sparkles} size={16} />
                         Evaluation Details
                       </div>
 
                       {analysis.matched_skills && analysis.matched_skills.length > 0 && (
                         <div style={{ marginBottom: '1rem' }}>
                           <div style={{ fontSize: '0.85em', color: '#cbd5e1', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                            <CheckCircle size={14} />
+                            <SmartIcon icon={CheckCircle} size={14} />
                             Skills Match: <span style={{ color: '#4caf50', fontWeight: 'bold' }}>
                               {analysis.skill_score}%
                             </span>
@@ -706,7 +697,7 @@ const UserDashboard = () => {
                       {analysis.missing_skills && analysis.missing_skills.length > 0 && (
                         <div style={{ marginBottom: '1rem' }}>
                           <div style={{ fontSize: '0.85em', color: '#cbd5e1', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                            <AlertCircle size={14} />
+                            <SmartIcon icon={AlertCircle} size={14} />
                             Missing Skills
                           </div>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -740,7 +731,7 @@ const UserDashboard = () => {
                       }}>
                         <div>
                           <div style={{ fontSize: '0.75em', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                            <Target size={12} />
+                            <SmartIcon icon={Target} size={12} />
                             Contextual Fit
                           </div>
                           <div style={{ fontSize: '0.9em', fontWeight: 'bold', color: '#e2e8f0' }}>
@@ -750,7 +741,7 @@ const UserDashboard = () => {
                         {analysis.experience_years !== undefined && (
                           <div>
                             <div style={{ fontSize: '0.75em', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                              <Briefcase size={12} />
+                              <SmartIcon icon={Briefcase} size={12} />
                               Experience
                             </div>
                             <div style={{ fontSize: '0.9em', fontWeight: 'bold', color: '#e2e8f0' }}>
@@ -771,7 +762,7 @@ const UserDashboard = () => {
                       marginTop: '1rem',
                       textAlign: 'center'
                     }}>
-                      <Clock size={32} style={{ color: '#94a3b8', marginBottom: '0.5rem' }} />
+                      <SmartIcon icon={Clock} variant="soft" size={32} style={{ marginBottom: '0.5rem' }} />
                       <div style={{ fontSize: '0.9em', color: '#94a3b8' }}>
                         Pending Evaluation
                       </div>
@@ -802,13 +793,13 @@ const UserDashboard = () => {
                   <strong>{selectedJob.company_profiles?.company_name}</strong>
                   {selectedJob.location && (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.5rem' }}>
-                      <MapPin size={14} />
+                      <SmartIcon icon={MapPin} size={14} />
                       {selectedJob.location}
                     </span>
                   )}
                   {selectedJob.type && (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.5rem' }}>
-                      <Target size={14} />
+                      <SmartIcon icon={Target} size={14} />
                       {selectedJob.type}
                     </span>
                   )}
@@ -828,13 +819,13 @@ const UserDashboard = () => {
                   padding: '0.5rem'
                 }}
               >
-                <X size={24} />
+                <SmartIcon icon={X} size={24} />
               </button>
             </div>
 
             <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1.5rem', paddingRight: '10px' }}>
               <h4 style={{ color: '#4cc3ff', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FileText size={18} />
+                <SmartIcon icon={FileText} size={18} />
                 Job Description
               </h4>
               <p style={{ color: '#ddd', whiteSpace: 'pre-wrap' }}>{selectedJob.description}</p>
@@ -842,7 +833,7 @@ const UserDashboard = () => {
               {selectedJob.requirements && (
                 <>
                   <h4 style={{ color: '#4cc3ff', marginTop: '1rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <CheckCircle size={18} />
+                    <SmartIcon icon={CheckCircle} size={18} />
                     Requirements
                   </h4>
                   <p style={{ color: '#ddd', whiteSpace: 'pre-wrap' }}>{selectedJob.requirements}</p>
@@ -857,7 +848,7 @@ const UserDashboard = () => {
                     rel="noopener noreferrer"
                     style={{ color: '#4cc3ff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
                   >
-                    <Globe size={16} />
+                    <SmartIcon icon={Globe} size={16} />
                     Visit Company Website →
                   </a>
                 </div>
@@ -875,12 +866,12 @@ const UserDashboard = () => {
               >
                 {applications.some(app => app.job_id === selectedJob.id) ? (
                   <>
-                    <CheckCircle size={16} />
+                    <SmartIcon icon={CheckCircle} size={16} />
                     Already Applied
                   </>
                 ) : (
                   <>
-                    <FileText size={16} />
+                    <SmartIcon icon={FileText} size={16} />
                     Apply Now
                   </>
                 )}
@@ -888,7 +879,7 @@ const UserDashboard = () => {
             ) : (
               <>
                 <h4 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Upload size={18} />
+                  <SmartIcon icon={Upload} size={18} />
                   Apply for this position
                 </h4>
                 <div style={{ 
@@ -909,7 +900,7 @@ const UserDashboard = () => {
                   />
                   {resumeFile && (
                     <p style={{ color: '#4cff88', marginTop: '0.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <CheckCircle size={14} />
+                      <SmartIcon icon={CheckCircle} size={14} />
                       {resumeFile.name}
                     </p>
                   )}
@@ -924,7 +915,7 @@ const UserDashboard = () => {
                   onClick={handleSubmitResume}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                 >
-                  <Upload size={16} />
+                  <SmartIcon icon={Upload} size={16} />
                   Submit Application
                 </button>
               )}
@@ -937,7 +928,7 @@ const UserDashboard = () => {
                 }}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
               >
-                <X size={16} />
+                <SmartIcon icon={X} size={16} />
                 Close
               </button>
             </div>

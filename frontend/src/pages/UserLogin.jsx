@@ -151,7 +151,7 @@ const UserLogin = () => {
 
             {isLogin && (
               <p
-                style={{ cursor: "pointer", color: "#2563eb", fontSize: "14px", marginTop: "5px" }}
+                style={{ cursor: "pointer", color: "var(--accent)", fontSize: "14px", marginTop: "5px" }}
                 onClick={handleForgotPassword}
               >
                 Forgot Password?

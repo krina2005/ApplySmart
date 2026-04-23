@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useDialog } from "../components/DialogProvider";
+import { 
+  Building2, 
+  MapPin, 
+  Globe, 
+  Trash2, 
+  CheckCircle, 
+  XCircle, 
+  Clock, 
+  Ban, 
+  RefreshCw,
+  Search,
+  Users
+} from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -140,7 +154,10 @@ const AdminDashboard = () => {
       {/* ── HEADER ── */}
       <div className="admin-header">
         <div>
-          <h1 className="admin-title">Admin Dashboard</h1>
+          <h1 className="admin-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <SmartIcon icon={Users} variant="soft" size={32} color="var(--accent)" />
+            Admin Dashboard
+          </h1>
           <p className="admin-subtitle">
             Manage company registrations and control platform access
           </p>
@@ -171,8 +188,9 @@ const AdminDashboard = () => {
         <button
           className={`admin-tab ${activeTab === "pending" ? "active-tab" : ""}`}
           onClick={() => setActiveTab("pending")}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          ⏳ Pending Approval
+          <SmartIcon icon={Clock} size={16} /> Pending Approval
           {pending.length > 0 && (
             <span className="tab-badge pending-badge">{pending.length}</span>
           )}
@@ -180,32 +198,36 @@ const AdminDashboard = () => {
         <button
           className={`admin-tab ${activeTab === "approved" ? "active-tab" : ""}`}
           onClick={() => setActiveTab("approved")}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          ✅ Approved
+          <SmartIcon icon={CheckCircle} size={16} /> Approved
           <span className="tab-badge approved-badge">{approved.length}</span>
         </button>
         <button
           className={`admin-tab ${activeTab === "banned" ? "active-tab" : ""}`}
           onClick={() => setActiveTab("banned")}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          🚫 Banned
+          <SmartIcon icon={Ban} size={16} /> Banned
           {banned.length > 0 && (
             <span className="tab-badge banned-badge">{banned.length}</span>
           )}
         </button>
       </div>
 
-      {/* ── SEARCH ── */}
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search company..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="search-input"
-        />
+      <div className="search-container" style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', flex: 1 }}>
+          <SmartIcon icon={Search} size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+          <input
+            type="text"
+            placeholder="Search company..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
         <button className="refresh-btn" onClick={fetchCompanies} title="Refresh">
-          ↻
+          <SmartIcon icon={RefreshCw} size={18} />
         </button>
       </div>
 
@@ -240,13 +262,15 @@ const AdminDashboard = () => {
             ) : (
               filtered.map((company) => (
                 <tr key={company.id} className={actionLoading === company.id ? "row-loading" : ""}>
-                  <td className="td-company">
-                    <span className="company-name-text">{company.company_name || "—"}</span>
-                    <span className="company-email-text">{company.email || ""}</span>
+                  <td data-label="Company">
+                    <div className="td-company">
+                      <span className="company-name-text">{company.company_name || "—"}</span>
+                      <span className="company-email-text">{company.email || ""}</span>
+                    </div>
                   </td>
-                  <td>{company.industry || "—"}</td>
-                  <td>{company.location || "—"}</td>
-                  <td>
+                  <td data-label="Industry">{company.industry || "—"}</td>
+                  <td data-label="Location">{company.location || "—"}</td>
+                  <td data-label="Website">
                     {company.website ? (
                       <a href={company.website} target="_blank" rel="noreferrer">
                         {company.website.replace(/^https?:\/\//, "")}
@@ -255,7 +279,7 @@ const AdminDashboard = () => {
                       "—"
                     )}
                   </td>
-                  <td>
+                  <td data-label="Status">
                     {company.is_banned ? (
                       <span className="badge badge-banned">Banned</span>
                     ) : company.is_approved ? (
@@ -264,7 +288,8 @@ const AdminDashboard = () => {
                       <span className="badge badge-pending">Pending</span>
                     )}
                   </td>
-                  <td className="action-cell">
+                  <td data-label="Actions">
+                    <div className="action-cell">
                     {/* PENDING → Approve or Reject */}
                     {!company.is_approved && !company.is_banned && (
                       <>
@@ -306,6 +331,7 @@ const AdminDashboard = () => {
                         {actionLoading === company.id ? "…" : "Restore"}
                       </button>
                     )}
+                    </div>
                   </td>
                 </tr>
               ))

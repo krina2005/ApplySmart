@@ -11,7 +11,7 @@
   background-color: var(--bg-card);
   padding: 3rem;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
   width: 100%;
   max-width: 400px;
   border: 1px solid var(--border);
@@ -58,11 +58,11 @@
 
 .form-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  box-shadow: var(--shadow-accent);
 }
 
 .form-input::placeholder {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .submit-btn {
@@ -116,9 +116,9 @@
 }
 
 .match-success {
-  color: #22c55e; /* Green */
+  color: var(--status-success-text);
 }
 
 .match-error {
-  color: #ef4444; /* Red */
+  color: var(--status-error-text);
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import {Brain,User,Building2,BarChart3,Zap,Lock,} from "lucide-react";
+import { Brain, User, Building2, BarChart3, Zap, Lock } from "lucide-react";
+import SmartIcon from "../components/SmartIcon";
 import "./Home.css";
 
 const Home = () => {
@@ -86,7 +87,7 @@ const Home = () => {
 
         <div className="features-grid">
           <div className="feature-card">
-            <Brain className="feature-icon" />
+            <SmartIcon icon={Brain} variant="soft" className="feature-icon" size={28} />
             <h3>AI-Powered Ranking</h3>
             <p>
               Advanced NLP algorithms analyze resumes against job descriptions,
@@ -95,7 +96,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <User className="feature-icon" />
+            <SmartIcon icon={User} variant="soft" className="feature-icon" size={28} />
             <h3>User Dashboard</h3>
             <p>
               Job seekers can browse jobs, apply with one click, and track application
@@ -104,7 +105,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <Building2 className="feature-icon" />
+            <SmartIcon icon={Building2} variant="soft" className="feature-icon" size={28} />
             <h3>Company Dashboard</h3>
             <p>
               Employers can post jobs, manage applications, and use AI-powered
@@ -113,7 +114,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <BarChart3 className="feature-icon" />
+            <SmartIcon icon={BarChart3} variant="soft" className="feature-icon" size={28} />
             <h3>Smart Analytics</h3>
             <p>
               Detailed breakdowns of skills match, missing qualifications,
@@ -122,7 +123,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <Zap className="feature-icon" />
+            <SmartIcon icon={Zap} variant="soft" className="feature-icon" size={28} />
             <h3>Real-Time Updates</h3>
             <p>
               Instant notifications when applications are reviewed, ranked,
@@ -131,7 +132,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <Lock className="feature-icon" />
+            <SmartIcon icon={Lock} variant="soft" className="feature-icon" size={28} />
             <h3>Secure & Private</h3>
             <p>
               Enterprise-grade security with Supabase authentication and
