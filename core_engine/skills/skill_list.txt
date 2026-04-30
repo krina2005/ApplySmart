@@ -1,60 +1,46 @@
 # Programming Languages
 python
 java
-javascript
-typescript
+javascript,js
+typescript,ts
 c++
 c#
-c
-go
-golang
+go,golang
 rust
 ruby
 php
 swift
 kotlin
 scala
-r
+r language
 matlab
 perl
-shell scripting
-bash
+bash,shell scripting
 powershell
 
-# Web Development - Frontend
-html
-html5
-css
-css3
-sass
-scss
+# Frontend
+html,html5
+css,css3
+sass,scss
 less
-react
-reactjs
-react.js
-angular
-angularjs
-vue
-vue.js
-vuejs
-next.js
-nextjs
+react,reactjs,react.js
+angular,angularjs
+vue,vuejs,vue.js
+next.js,nextjs
 nuxt.js
 svelte
 jquery
 bootstrap
-tailwind css
-material ui
+tailwind,tailwind css
+material ui,mui
 redux
 webpack
 vite
 babel
 
-# Web Development - Backend
-node.js
-nodejs
-express
-express.js
+# Backend
+node.js,nodejs
+express,express.js
 django
 flask
 fastapi
@@ -63,17 +49,14 @@ spring boot
 asp.net
 .net core
 laravel
-rails
-ruby on rails
+rails,ruby on rails
 nestjs
 
-# Mobile Development
+# Mobile
 react native
 flutter
 android
 ios
-swift
-kotlin
 xamarin
 ionic
 cordova
@@ -81,7 +64,7 @@ cordova
 # Database
 sql
 mysql
-postgresql
+postgresql,postgres
 mongodb
 redis
 cassandra
@@ -96,15 +79,11 @@ couchdb
 firebase
 
 # Cloud & DevOps
-aws
-amazon web services
-azure
-microsoft azure
-google cloud
-gcp
+aws,amazon web services
+azure,microsoft azure
+gcp,google cloud
 docker
-kubernetes
-k8s
+kubernetes,k8s
 jenkins
 gitlab ci
 github actions
@@ -114,32 +93,25 @@ chef
 puppet
 circleci
 travis ci
-cloud deployment
-cloud computing
 serverless
 lambda
 
-# Data Science & AI/ML
-machine learning
-deep learning
-artificial intelligence
-ai
-ml
+# AI/ML
+machine learning,ml
+deep learning,dl
+artificial intelligence,ai
 data science
 data analysis
 pandas
 numpy
 scipy
-scikit-learn
-sklearn
+scikit-learn,sklearn
 tensorflow
 pytorch
 keras
 opencv
-nlp
-natural language processing
+nlp,natural language processing
 computer vision
-data visualization
 matplotlib
 seaborn
 plotly
@@ -149,14 +121,12 @@ power bi
 
 # Big Data
 hadoop
-spark
-apache spark
-kafka
-apache kafka
+apache spark,spark
+kafka,apache kafka
 hive
 pig
 flink
-airflow
+airflow,apache airflow
 databricks
 
 # Version Control
@@ -165,15 +135,11 @@ github
 gitlab
 bitbucket
 svn
-version control
 
-# API & Integration
-rest api
-restful api
+# APIs
+rest api,restful api
 graphql
 soap
-api development
-api integration
 microservices
 websocket
 grpc
@@ -192,53 +158,26 @@ testng
 cypress
 playwright
 
-# Software Development
-agile
-scrum
-kanban
-jira
-confluence
-software development
-sdlc
-ci/cd
-continuous integration
-continuous deployment
-tdd
-test driven development
-design patterns
-object oriented programming
-oop
-functional programming
-solid principles
-
 # Security
 cybersecurity
-information security
 penetration testing
 ethical hacking
 owasp
 ssl
 tls
 encryption
-authentication
-authorization
 oauth
 jwt
-security testing
 
 # Networking
 tcp/ip
 http
 https
 dns
-networking
-network protocols
-load balancing
-cdn
 nginx
-apache
+apache server
 
-# Operating Systems
+# OS
 linux
 unix
 windows
@@ -248,26 +187,21 @@ centos
 debian
 red hat
 
-# Containers & Orchestration
-docker
-kubernetes
+# Containers
 docker compose
 helm
 openshift
 rancher
 
-# Message Queues
+# Messaging
 rabbitmq
-kafka
-redis
 activemq
 amazon sqs
 
-# Monitoring & Logging
+# Monitoring
 prometheus
 grafana
 elk stack
-elasticsearch
 logstash
 kibana
 splunk
@@ -278,48 +212,23 @@ new relic
 blockchain
 ethereum
 solidity
-smart contracts
 web3
 cryptocurrency
 
-# Game Development
+# Game Dev
 unity
 unreal engine
-game development
-3d modeling
 blender
 
 # UI/UX
-ui design
-ux design
 figma
 sketch
 adobe xd
 wireframing
 prototyping
-user experience
-user interface
 
-# Project Management
-project management
-agile methodology
-scrum master
-product management
-stakeholder management
-
-# Soft Skills
-problem solving
-analytical thinking
-communication
-teamwork
-leadership
-time management
-critical thinking
-collaboration
-
-# Tools & IDEs
-visual studio code
-vscode
+# Tools
+visual studio code,vscode
 intellij idea
 pycharm
 eclipse
@@ -330,7 +239,7 @@ emacs
 postman
 insomnia
 
-# CMS & E-commerce
+# CMS
 wordpress
 drupal
 joomla
@@ -339,12 +248,10 @@ shopify
 woocommerce
 
 # Data Engineering
-data engineering
 etl
 data pipeline
 data warehousing
 data modeling
-apache airflow
 dbt
 
 # System Design
@@ -352,21 +259,17 @@ system design
 distributed systems
 scalability
 high availability
-load balancing
 caching
 database design
 architecture
 
-# Other Technologies
+# Others
 xml
 json
 yaml
 markdown
-regex
-regular expressions
-webscraping
+regex,regular expressions
 beautiful soup
 scrapy
-selenium
 automation
 rpa
