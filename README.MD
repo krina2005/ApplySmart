@@ -38,6 +38,12 @@ app_port: 7860
 
 ---
 
+## 🎬 Video Demo
+
+[Watch the full demo video](demo\Apply-smart.mp4)
+
+---
+
 ## ✨ Features
 
 ### For Job Seekers
@@ -56,12 +62,12 @@ app_port: 7860
 
 ### AI Ranking Engine
 - 🧠 **Sentence Transformers**: Semantic similarity analysis using `all-MiniLM-L6-v2`
-- 📝 **spaCy NLP**: Advanced text processing and entity recognition
+- � **Resume Text Extraction**: PDF parsing and text normalization
 - 🎯 **Multi-Factor Scoring**:
-  - Skills Match (40%)
-  - Experience Alignment (30%)
-  - Contextual Relevance (20%)
-  - Keyword Matching (10%)
+  - Skills Match
+  - Experience Alignment
+  - Contextual Relevance
+  - Keyword Matching
 - 💡 **Google Gemini Integration**: AI-powered insights and recommendations
 
 ---
@@ -70,18 +76,16 @@ app_port: 7860
 
 ### Frontend
 - **Framework**: React 19 with Vite
-- **Styling**: Modern CSS with gradients, glassmorphism, and animations
+- **Styling**: Modern CSS with gradients and layout utilities
 - **Routing**: React Router DOM v7
-- **State Management**: React Hooks
 - **Authentication**: Supabase Auth
-- **Real-time**: Supabase Realtime subscriptions
+- **Data**: Supabase table queries and realtime subscriptions
 
 ### Backend
 - **Framework**: FastAPI (Python 3.10+)
 - **Database**: Supabase (PostgreSQL)
 - **AI/NLP**: 
   - Sentence Transformers (`all-MiniLM-L6-v2`)
-  - spaCy (`en_core_web_sm`)
   - Google Gemini AI
 - **PDF Processing**: PyPDF2, pdfplumber
 - **Server**: Uvicorn (ASGI)
@@ -106,42 +110,33 @@ app_port: 7860
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/krina2005/ApplySmart.git
-cd AI_Resume_Evaluation_System
+cd ApplySmart
 ```
 
 ### 2. Backend Setup
 
 #### Install Python Dependencies
 ```bash
-# Create virtual environment (recommended)
 python -m venv venv
 
 # Activate virtual environment
 # Windows:
 .\venv\Scripts\activate
-# Mac/Linux:
+# macOS/Linux:
 source venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-#### Download spaCy Model
-```bash
-python -m spacy download en_core_web_sm
-```
-
 #### Environment Variables
-Create a `.env` file in the root directory:
+Create a `.env` file in the repository root with:
 ```env
-# Supabase Configuration
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_KEY=your_supabase_service_role_key
-
-# Google Gemini API
-GOOGLE_API_KEY=your_google_gemini_api_key
+GEMINI_API_KEY=your_google_gemini_api_key
 ```
+
+> The backend reads Supabase and Gemini credentials from environment variables.
 
 #### Run Backend Server
 ```bash
@@ -169,35 +164,42 @@ Frontend will be available at `http://localhost:5173`
 
 ### 4. Database Setup
 
-1. Create a Supabase project
-2. Run the SQL schema files in your Supabase SQL editor:
-   - `supabase_schema.sql` - Main database schema
-   - `setup_storage.sql` - Storage buckets and policies
-   - `fix_rls.sql` - Row Level Security policies
-   - `fix_applications_policy.sql` - Application access policies
+1. Create a Supabase project.
+2. Configure tables and storage in your Supabase dashboard.
+3. Create the following tables and columns to match the frontend integration:
+   - `users`
+   - `companies`
+   - `jobs`
+   - `applications`
+4. Configure Supabase Storage for resume PDF uploads.
+
+> Note: This repository does not include SQL schema files. Use Supabase table editor or your own schema scripts.
 
 ---
 
 ## 📂 Project Structure
 
 ```
-AI_Resume_Evaluation_System/
-├── core_engine/              # Backend Logic
+ApplySmart/
+├── config/                  # Environment + Gemini config
+│   └── gemini_config.py     # Loads GEMINI_API_KEY
+├── core_engine/             # Backend Logic
 │   ├── main.py              # FastAPI entry point & API routes
-│   ├── job_ranker.py        # AI ranking orchestration
-│   ├── evaluate.py          # Resume evaluation logic
-│   ├── db_client.py         # Supabase client
-│   ├── nlp_engine/          # NLP Processing
-│   │   ├── embedding_model.py    # Sentence Transformers
-│   │   ├── feature_extractor.py  # Skills & experience extraction
+│   ├── job_ranker.py        # Supabase application ranking workflow
+│   ├── matcher.py           # Resume / job description matching
+│   ├── nlp_engine/          # NLP Processing and ranking
+│   │   ├── embedding_model.py    # Embedding generation
+│   │   ├── feature_extractor.py  # Feature extraction helpers
 │   │   ├── preprocessing.py      # Text cleaning
-│   │   └── ranker.py            # Scoring algorithm
-│   ├── ai_engine/           # Google Gemini integration
-│   └── utils/               # PDF parsing, helpers
+│   │   └── ranker.py            # Ranking algorithm
+│   └── utils/               # PDF parsing and helpers
+│       ├── pdf_reader.py
+│       └── text_cleaner.py
 ├── frontend/                # React Application
 │   ├── src/
-│   │   ├── components/      # Reusable components (Navbar, Footer)
-│   │   ├── pages/          # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── pages/           # Page components
+│   │   └── supabaseClient.js # Supabase client configuration
 │   │   │   ├── Home.jsx            # Landing page
 │   │   │   ├── UserDashboard.jsx   # Job seeker dashboard
 │   │   │   ├── CompanyDashboard.jsx # Employer dashboard
@@ -222,46 +224,34 @@ The ranking system uses a multi-factor approach:
    - Compares resume and job description embeddings
    - Captures contextual meaning beyond keywords
 
-2. **Skills Extraction** (spaCy NLP)
-   - Identifies technical and soft skills
-   - Matches against job requirements
+2. **Text Extraction**
+   - Reads resume content from uploaded PDF files
+   - Normalizes and cleans extracted text
 
-3. **Experience Analysis**
-   - Extracts years of experience
-   - Analyzes job titles and responsibilities
+3. **Experience and Content Matching**
+   - Matches resume content against job description content
+   - Uses keyword and semantic relevance scoring
 
 4. **Weighted Scoring**
    ```
-   Final Score = (Skills × 0.4) + (Experience × 0.3) + 
+   Final Score = (Skills × 0.4) + (Experience × 0.3) +
                  (Contextual × 0.2) + (Keywords × 0.1)
    ```
 
 ### Security Features
 
-- **Row Level Security (RLS)**: Users can only access their own data
-- **JWT Authentication**: Secure token-based authentication
-- **Service Role**: Backend uses service role for AI ranking operations
-- **Storage Policies**: Secure resume file access
+- **Supabase Auth**: Secure user login and session management
+- **Token-based access**: Backend actions require valid Supabase auth tokens
+- **Storage rules**: Resume access controlled by Supabase storage policies
 
 ---
 
 ## 🚀 API Endpoints
 
-### Authentication
-- `POST /auth/signup` - User registration
-- `POST /auth/login` - User login
-
-### Jobs
-- `GET /jobs` - List all job postings
-- `POST /jobs` - Create new job posting (companies only)
-
-### Applications
-- `POST /applications` - Submit job application
-- `GET /applications/user/:id` - Get user's applications
-- `GET /applications/company/:id` - Get company's applications
-
-### AI Ranking
-- `POST /rank-applications` - Trigger AI ranking for a job posting
+### Resume & Ranking
+- `POST /analyze-resume` — Upload a resume PDF and job description for instant analysis
+- `POST /rank-resumes` — Rank multiple resumes against a job description
+- `POST /rank-job/{job_id}` — Fetch applications for a job, rank them, and update Supabase with scores
 
 ---
 
@@ -293,9 +283,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 🙏 Acknowledgments
 
 - **Sentence Transformers** - For semantic similarity analysis
-- **spaCy** - For NLP processing
 - **Google Gemini** - For AI-powered insights
-- **Supabase** - For backend infrastructure
+- **Supabase** - For backend infrastructure and auth
+- **FastAPI** - For the backend API framework
 - **React** - For the frontend framework
 
 ---
