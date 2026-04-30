@@ -118,4 +118,3 @@ sentence_transformers/
 *.gz
 *.zip
 *.tar
-demo/
